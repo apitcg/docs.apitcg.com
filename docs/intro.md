@@ -5,44 +5,79 @@ slug: /
 
 # Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Welcome to use API TCG, the purpose of this API is to expose the card data of each TCG, for now it is only available for One Piece.
 
-## Getting Started
+## How to use the API
 
-Get started by **creating a new site**.
+To consume this API, you must use the following url
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+https://apitcg.com/api/onepiece/cards
 
-### What you'll need
+This API receives two parameters, `property` and `value`, where `property` is the property you want to filter and `value`, the value you want to search.
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+### Example
 
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
+```cli
+https://apitcg.com/api/onepiece/cards?property=name&value=luffy
 ```
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+#### Response
 
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
+```json
+{
+    "data": [
+        {
+            "id": "OP01-003",
+            "code": "OP01-003",
+            "rarity": "L",
+            "type": "LEADER",
+            "name": "Monkey.D.Luffy",
+            "image": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-003.png",
+            "cost": 4,
+            "attribute": {
+                "name": "Strike",
+                "image": "https://en.onepiece-cardgame.com/images/cardlist/attribute/ico_type01.png"
+            },
+            "power": 5000,
+            "counter": "-",
+            "color": "Red/Green",
+            "family": "Supernovas/Straw Hat Crew",
+            "ability": "[Activate: Main] [Once Per Turn] ➃ (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your {Supernovas} or {Straw Hat Crew} type Character cards with a cost of 5 or less as active. It gains +1000 power during this turn.",
+            "trigger": "",
+            "set": {
+                "name": "-ROMANCE DAWN- [OP01]"
+            },
+            "notes": [
+                {
+                    "name": "Errata Card",
+                    "url": "https://en.onepiece-cardgame.com//rules/errata_card/#errata_05"
+                }
+            ]
+        }
+        ...
+    ],
+    "totalCount": 39
+}
 ```
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+## Available properties
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+These are the properties you can use to filter the available cards:
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- id
+- code
+- rarity
+- type
+- name
+- cost
+- power
+- counter
+- color
+- family
+- ability
+- trigger
+- cardSet
+
+## Questions?
+
+If you have any questions, you can write to: iturra.sebastian@hotmail.com

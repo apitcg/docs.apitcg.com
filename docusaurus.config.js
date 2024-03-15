@@ -74,7 +74,7 @@ const config = {
           }, 
           {to: 'showcase', label: 'Showcase', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/apitcg',
             label: 'GitHub',
             position: 'right',
           },
@@ -106,7 +106,7 @@ const config = {
             items: [
               {
                 label: 'Patreon',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/apitcg',
               },
             ],
           },
