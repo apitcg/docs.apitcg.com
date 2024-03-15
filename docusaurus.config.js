@@ -106,7 +106,7 @@ const config = {
             items: [
               {
                 label: 'Patreon',
-                href: 'https://github.com/apitcg',
+                href: 'https://patreon.com/apitcg',
               },
             ],
           },

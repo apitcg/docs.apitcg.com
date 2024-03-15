@@ -7,7 +7,7 @@ slug: /
 
 Welcome to use API TCG, the purpose of this API is to expose the card data of each TCG, for now it is only available for One Piece.
 
-## How to use the API
+## How to use
 
 To consume this API, you must use the following url
 
