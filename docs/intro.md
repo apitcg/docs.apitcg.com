@@ -11,14 +11,14 @@ Welcome to use API TCG, the purpose of this API is to expose the card data of ea
 
 To consume this API, you must use the following url
 
-https://apitcg.com/api/onepiece/cards
+https://apitcg.com/api/one-piece/cards
 
 This API receives two parameters, `property` and `value`, where `property` is the property you want to filter and `value`, the value you want to search.
 
 ### Example
 
 ```cli
-https://apitcg.com/api/onepiece/cards?property=name&value=luffy
+https://apitcg.com/api/one-piece/cards?property=name&value=luffy
 ```
 
 #### Response
