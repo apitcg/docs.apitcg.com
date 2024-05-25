@@ -5,13 +5,20 @@ slug: /
 
 # Introduction
 
-Welcome to use API TCG, the purpose of this API is to expose the card data of each TCG, for now it is only available for One Piece.
+Welcome to use API TCG, the purpose of this API is to expose the card data of each TCG.
+
+## TCG Available
+For now it is only available for:
+
+- Pokémon
+- One Piece
 
 ## How to use
 
-To consume this API, you must use the following url
+To consume this API, you must use the following URL:
 
-https://apitcg.com/api/one-piece/cards
+- One Piece, https://apitcg.com/api/one-piece/cards
+- Pokémon, https://apitcg.com/api/pokemon/cards
 
 This API receives two parameters, `property` and `value`, where `property` is the property you want to filter and `value`, the value you want to search.
 
