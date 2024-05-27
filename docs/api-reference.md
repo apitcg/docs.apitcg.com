@@ -9,7 +9,8 @@ slug: /api-reference
 For now it is only available for:
 
 - Pokémon
-- One Piece
+- One Piece (https://en.onepiece-cardgame.com/)
+- Dragon Ball Fusion (https://www.dbs-cardgame.com/fw/en/)
 
 ## How to use
 
@@ -17,6 +18,7 @@ To consume this API, you must use the following URL:
 
 - One Piece, https://apitcg.com/api/one-piece/cards
 - Pokémon, https://apitcg.com/api/pokemon/cards
+- Dragon Ball Fusion, https://apitcg.com/api/dragon-ball-fusion/cards
 
 This API receives two parameters, `property` and `value`, where `property` is the property you want to filter and `value`, the value you want to search.
 
@@ -183,3 +185,63 @@ These are the properties you can use to filter the available cards:
 
 - id
 - name
+
+## Dragon Ball Fusion
+
+### Example request 
+
+```cli
+https://apitcg.com/api/dragon-ball-fusion/cards?property=name&value=goku
+```
+
+### Example response
+
+```json
+{
+    "data": [
+         {
+            "id": "FB01-001",
+            "code": "FB01-001",
+            "rarity": "L",
+            "name": "Son Goku",
+            "color": "Red",
+            "images": {
+                "small": "https://www.dbs-cardgame.com/fw/images/cards/card/en/FB01-001_f.webp",
+                "large": "https://www.dbs-cardgame.com/fw/images/cards/card/en/FB01-001_f.webp"
+            },
+            "cardType": "LEADER",
+            "cost": "-",
+            "specifiedCost": "-",
+            "power": "15000",
+            "comboPower": "-",
+            "features": "Saiyan/Universe 7",
+            "effect": "[When Attacking] Draw 1 card.<br>[Awaken] When your life is at 4 or less, draw 1 card. Then, flip this card over.",
+            "getIt": "BOOSTER PACK -AWAKENED PULSE- [FB01]",
+            "set": {
+                "id": "fb01",
+                "name": "Awakened pulse"
+            }
+        },
+        ...
+    ],
+    "totalCount": 99
+}
+```
+
+### Available properties
+
+These are the properties you can use to filter the available cards:
+
+- id
+- code
+- rarity
+- name
+- color
+- cardType
+- cost
+- specifiedCost
+- power
+- comboPower
+- features
+- effect
+- getIt
