@@ -11,6 +11,8 @@ For now it is only available for:
 - Pokémon
 - One Piece (https://en.onepiece-cardgame.com/)
 - Dragon Ball Fusion (https://www.dbs-cardgame.com/fw/en/)
+- Digimon (https://world.digimoncard.com/)
+- Magic The (coming soon)
 
 ## How to use
 
@@ -19,6 +21,7 @@ To consume this API, you must use the following URL:
 - One Piece, https://apitcg.com/api/one-piece/cards
 - Pokémon, https://apitcg.com/api/pokemon/cards
 - Dragon Ball Fusion, https://apitcg.com/api/dragon-ball-fusion/cards
+- Digimon, https://apitcg.com/api/digimon/cards
 
 This API receives two parameters, `property` and `value`, where `property` is the property you want to filter and `value`, the value you want to search.
 
@@ -245,3 +248,58 @@ These are the properties you can use to filter the available cards:
 - features
 - effect
 - getIt
+
+## Digimon
+
+### Example request 
+
+```cli
+https://apitcg.com/api/digimon/cards?property=name&value=gallantmon
+```
+
+### Example response
+
+```json
+{
+    "data": [
+        {
+            "id": "BT16-102",
+            "code": "BT16-102",
+            "name": "Magnamon (X Antibody)",
+            "level": "Lv.6",
+            "colors": [
+                "Yellow",
+                "Blue",
+                "Black"
+            ],
+            "images": {
+                "small": "https://world.digimoncard.com/images/cardlist/card/BT16-102.png",
+                "large": "https://world.digimoncard.com/images/cardlist/card/BT16-102.png"
+            },
+            "cardType": "Digimon",
+            "form": "Mega",
+            "attribute": "Vaccine",
+            "type": "Holy Warrior/X Antibody/Royal Knight",
+            "dp": "12000",
+            "playCost": "12",
+            "digivolveCost1": "4 from Lv.5",
+            "digivolveCost2": "4 from Lv.5",
+            "effect": "[Digivolve] 2-color w/[Magnamon] in name: Cost 5<br>＜Blocker＞＜Armor Purge＞ <br>[When Digivolving] If [Magnamon (X Antibody)] or an [Armor Form] trait card is in this Digimon's digivolution cards, until the end of your opponent's turn, this Digimon gets +3000 DP and isn't affected by your opponent's effects. Then, unsuspend it.<br>[All Turns] [Once Per Turn] When a card is removed from a security stack, you may activate 1 of this Digimon's [When Digivolving] effects. <br>(Rule) Trait: Has [Free] attribute.",
+            "inheritedEffect": "-",
+            "securityEffect": "-",
+            "notes": "<a href=\"/products/pack/ver16/\">▹BOOSTER BEGINNING OBSERVER [BT16]</a>"
+        },
+        ...
+    ],
+    "totalCount": 99
+}
+```
+
+### Available properties
+
+These are the properties you can use to filter the available cards:
+
+- id
+- code
+- rarity
+- name
