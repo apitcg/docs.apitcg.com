@@ -6,9 +6,10 @@ slug: /api-reference
 # API Reference
 
 ## TCG Available
+
 For now it is only available for:
 
-- Pokémon
+- Pokémon (https://tcg.pokemon.com/es-es/)
 - One Piece (https://en.onepiece-cardgame.com/)
 - Dragon Ball Fusion (https://www.dbs-cardgame.com/fw/en/)
 - Digimon (https://world.digimoncard.com/)
