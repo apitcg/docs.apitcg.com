@@ -90,6 +90,14 @@ const config = {
                 label: 'Introduction',
                 to: '/docs/intro',
               },
+              {
+                label: 'API Reference',
+                to: '/docs/api-reference',
+              },
+              {
+                label: 'Questions',
+                to: '/docs/questions',
+              },
             ],
           },
           {
