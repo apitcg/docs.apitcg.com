@@ -9,20 +9,20 @@ slug: /api-reference
 
 For now it is only available for:
 
-- Pokémon (https://tcg.pokemon.com/es-es/)
-- One Piece (https://en.onepiece-cardgame.com/)
-- Dragon Ball Fusion (https://www.dbs-cardgame.com/fw/en/)
-- Digimon (https://world.digimoncard.com/)
+- Pokémon
+- One Piece 
+- Dragon Ball Fusion 
+- Digimon 
 - Magic The (coming soon)
 
 ## How to use
 
 To consume this API, you must use the following URL:
 
-- One Piece, https://apitcg.com/api/one-piece/cards
-- Pokémon, https://apitcg.com/api/pokemon/cards
-- Dragon Ball Fusion, https://apitcg.com/api/dragon-ball-fusion/cards
-- Digimon, https://apitcg.com/api/digimon/cards
+- One Piece, `https://apitcg.com/api/one-piece/cards`
+- Pokémon, `https://apitcg.com/api/pokemon/cards`
+- Dragon Ball Fusion, `https://apitcg.com/api/dragon-ball-fusion/cards`
+- Digimon, `https://apitcg.com/api/digimon/cards`
 
 This API receives two parameters, `property` and `value`, where `property` is the property you want to filter and `value`, the value you want to search.
 
