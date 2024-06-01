@@ -104,17 +104,16 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Github',
-                href: 'https://github.com/apitcg',
+                label: 'Discord',
+                href: 'https://discord.gg/D7EV64zJ',
               },
-            ],
-          },
-          {
-            title: 'Donate',
-            items: [
               {
                 label: 'Patreon',
                 href: 'https://patreon.com/apitcg',
+              },
+              {
+                label: 'Github',
+                href: 'https://github.com/apitcg',
               },
             ],
           },
