@@ -97,8 +97,6 @@ These are the properties you can use to filter the available cards:
 
 ## Pokémon
 
-The Pokémon data source provided is from pokemontcg.io
-
 ### Example request 
 
 ```cli
