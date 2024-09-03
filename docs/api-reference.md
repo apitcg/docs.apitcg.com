@@ -13,7 +13,7 @@ For now it is only available for:
 - One Piece 
 - Dragon Ball Fusion 
 - Digimon 
-- Magic The (coming soon)
+- Magic The Gathering
 
 ## How to use
 
@@ -93,7 +93,6 @@ These are the properties you can use to filter the available cards:
 - ability
 - trigger
 - cardSet
-
 
 ## Pokémon
 
