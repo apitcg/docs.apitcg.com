@@ -88,15 +88,15 @@ const config = {
             items: [
               {
                 label: 'Introduction',
-                to: '/docs/intro',
+                to: '/',
               },
               {
                 label: 'API Reference',
-                to: '/docs/api-reference',
+                to: '/api-reference',
               },
               {
                 label: 'Questions',
-                to: '/docs/questions',
+                to: '/questions',
               },
             ],
           },

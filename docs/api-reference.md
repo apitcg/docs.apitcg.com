@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 slug: /api-reference
 ---
 
@@ -92,7 +92,6 @@ These are the properties you can use to filter the available cards:
 - family
 - ability
 - trigger
-- cardSet
 
 ## Pokémon
 
