@@ -91,6 +91,10 @@ const config = {
                 to: '/',
               },
               {
+                label: 'Authentication',
+                to: '/authentication',
+              },
+              {
                 label: 'API Reference',
                 to: '/api-reference',
               },
@@ -114,6 +118,14 @@ const config = {
               {
                 label: 'Github',
                 href: 'https://github.com/apitcg',
+              },
+            ],
+          },{
+            title: 'More',
+            items: [
+              {
+                label: 'Developer Platform',
+                href: 'https://apitcg.com/platform',
               },
             ],
           },
