@@ -14,6 +14,9 @@ For now it is only available for:
 - Dragon Ball Fusion 
 - Digimon 
 - Magic The Gathering
+- Union arena (Coming soon)
+- Star Wars (Coming soon)
+- Mitos y leyendas (Coming soon)
 
 ## How to use
 
@@ -23,6 +26,7 @@ To consume this API, you must use the following URL:
 - Pokémon, `https://apitcg.com/api/pokemon/cards`
 - Dragon Ball Fusion, `https://apitcg.com/api/dragon-ball-fusion/cards`
 - Digimon, `https://apitcg.com/api/digimon/cards`
+- Magic, `https://apitcg.com/api/magic/cards`
 
 This API receives two parameters, `property` and `value`, where `property` is the property you want to filter and `value`, the value you want to search.
 
