@@ -14,7 +14,7 @@ For now it is only available for:
 - Dragon Ball Fusion 
 - Digimon 
 - Magic The Gathering
-- Union arena (Coming soon)
+- Union arena (under construction)
 - Star Wars (Coming soon)
 - Mitos y leyendas (Coming soon)
 
