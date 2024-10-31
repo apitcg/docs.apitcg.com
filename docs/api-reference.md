@@ -14,7 +14,7 @@ For now it is only available for:
 - Dragon Ball Fusion 
 - Digimon 
 - Magic The Gathering
-- Union arena (under construction)
+- Union arena
 - Star Wars (Coming soon)
 - Mitos y leyendas (Coming soon)
 
@@ -27,6 +27,7 @@ To consume this API, you must use the following URL:
 - Dragon Ball Fusion, `https://apitcg.com/api/dragon-ball-fusion/cards`
 - Digimon, `https://apitcg.com/api/digimon/cards`
 - Magic, `https://apitcg.com/api/magic/cards`
+- Union Arena, `https://apitcg.com/api/union-arena/cards`
 
 This API receives two parameters, `property` and `value`, where `property` is the property you want to filter and `value`, the value you want to search.
 
@@ -304,3 +305,52 @@ These are the properties you can use to filter the available cards:
 - code
 - rarity
 - name
+
+## Union Arena
+
+### Example request 
+
+```cli
+https://apitcg.com/api/union-arena/cards?property=name&value=gon
+```
+
+### Example response
+
+```json
+{
+    "data": [
+        {
+            "id": "HTR-1-005",
+            "code": "HTR-1-005",
+            "url": "https://www.unionarena-tcg.com/na/cardlist/./detail_iframe.php?card_no=UE02BT/HTR-1-005",
+            "name": "Gon Freecss",
+            "rarity": "C",
+            "ap": "1",
+            "type": "Character",
+            "bp": "1500",
+            "affinity": "-",
+            "effect": "\n                 Draw a card, then place one card from your hand into your sideline.              ",
+            "trigger": "Draw a card.",
+            "images": {
+                "small": "https://www.unionarena-tcg.com/na/images/cardlist/card/UE02BT_HTR-1-005.png",
+                "large": "https://www.unionarena-tcg.com/na/images/cardlist/card/UE02BT_HTR-1-005.png"
+            },
+            "set": {
+                "name": "HUNTER X HUNTER"
+            },
+            "needEnergy": {
+                "value": "Blue-",
+                "logo": "https://www.unionarena-tcg.com/na/images/cardlist/icon/need/ico_character_energy_blue0.png"
+            }
+        },
+        ...
+    ],
+    "totalCount": 99
+}
+```
+
+### Available properties
+
+These are the properties you can use to filter the available cards:
+
+- ...
