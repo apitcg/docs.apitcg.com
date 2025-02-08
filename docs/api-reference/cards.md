@@ -1,9 +1,9 @@
 ---
-sidebar_position: 3
-slug: /api-reference
+sidebar_position: 1
+slug: /api-reference/cards
 ---
 
-# API Reference
+# Cards
 
 ## TCG Available
 
