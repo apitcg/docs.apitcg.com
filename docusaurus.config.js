@@ -109,7 +109,7 @@ const config = {
             items: [
               {
                 label: 'Discord',
-                href: 'https://discord.gg/D7EV64zJ',
+                href: 'https://discord.gg/EkxEKGJzRg',
               },
               {
                 label: 'Patreon',

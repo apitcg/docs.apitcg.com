@@ -36,48 +36,46 @@ This API receives two parameters, `property` and `value`, where `property` is th
 ### Example request 
 
 ```cli
-https://apitcg.com/api/one-piece/cards?property=name&value=luffy
+https://apitcg.com/api/one-piece/cards?name=luffy
 ```
 
 ### Example response
 
 ```json
 {
+    "page": 1,
+    "limit": 25,
+    "total": 61,
+    "totalPages": 3,
     "data": [
         {
-            "id": "OP01-003",
-            "code": "OP01-003",
-            "rarity": "L",
-            "type": "LEADER",
+            "id": "OP03-070",
+            "code": "OP03-070",
+            "rarity": "R",
+            "type": "CHARACTER",
             "name": "Monkey.D.Luffy",
             "images": {
-                "small": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-003.png",
-                "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-003.png"
+                "small": "https://en.onepiece-cardgame.com/images/cardlist/card/OP03-070.png",
+                "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP03-070.png"
             },
-            "cost": 4,
+            "cost": 6,
             "attribute": {
                 "name": "Strike",
                 "image": "https://en.onepiece-cardgame.com/images/cardlist/attribute/ico_type01.png"
             },
-            "power": 5000,
+            "power": 7000,
             "counter": "-",
-            "color": "Red/Green",
-            "family": "Supernovas/Straw Hat Crew",
-            "ability": "[Activate: Main] [Once Per Turn] ➃ (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your {Supernovas} or {Straw Hat Crew} type Character cards with a cost of 5 or less as active. It gains +1000 power during this turn.",
+            "color": "Purple",
+            "family": "Water Seven/Straw Hat Crew",
+            "ability": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.) You may trash 1 Character card with a cost of 5 from your hand: This Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)",
             "trigger": "",
             "set": {
-                "name": "-ROMANCE DAWN- [OP01]"
+                "name": "-PILLARS OF STRENGTH- [OP03]"
             },
-            "notes": [
-                {
-                    "name": "Errata Card",
-                    "url": "https://en.onepiece-cardgame.com//rules/errata_card/#errata_05"
-                }
-            ]
+            "notes": []
         },
         ...
-    ],
-    "totalCount": 39
+    ]
 }
 ```
 
@@ -256,44 +254,49 @@ These are the properties you can use to filter the available cards:
 ### Example request 
 
 ```cli
-https://apitcg.com/api/digimon/cards?property=name&value=gallantmon
+https://apitcg.com/api/digimon/cards?name=gallantmon
 ```
 
 ### Example response
 
 ```json
 {
+    "page": 1,
+    "limit": 25,
+    "total": 35,
+    "totalPages": 2,
     "data": [
         {
-            "id": "BT16-102",
-            "code": "BT16-102",
-            "name": "Magnamon (X Antibody)",
+            "id": "ST7-09",
+            "code": "ST7-09",
+            "name": "Gallantmon",
             "level": "Lv.6",
             "colors": [
-                "Yellow",
-                "Blue",
-                "Black"
+                "Red"
             ],
             "images": {
-                "small": "https://world.digimoncard.com/images/cardlist/card/BT16-102.png",
-                "large": "https://world.digimoncard.com/images/cardlist/card/BT16-102.png"
+                "small": "https://world.digimoncard.com/images/cardlist/card/ST7-09.png",
+                "large": "https://world.digimoncard.com/images/cardlist/card/ST7-09.png"
             },
             "cardType": "Digimon",
             "form": "Mega",
-            "attribute": "Vaccine",
-            "type": "Holy Warrior/X Antibody/Royal Knight",
-            "dp": "12000",
-            "playCost": "12",
-            "digivolveCost1": "4 from Lv.5",
-            "digivolveCost2": "4 from Lv.5",
-            "effect": "[Digivolve] 2-color w/[Magnamon] in name: Cost 5<br>＜Blocker＞＜Armor Purge＞ <br>[When Digivolving] If [Magnamon (X Antibody)] or an [Armor Form] trait card is in this Digimon's digivolution cards, until the end of your opponent's turn, this Digimon gets +3000 DP and isn't affected by your opponent's effects. Then, unsuspend it.<br>[All Turns] [Once Per Turn] When a card is removed from a security stack, you may activate 1 of this Digimon's [When Digivolving] effects. <br>(Rule) Trait: Has [Free] attribute.",
+            "attribute": "Virus",
+            "type": "Holy Warrior/Royal Knight",
+            "dp": "11000",
+            "playCost": "11",
+            "digivolveCost1": "3 from Lv.5",
+            "digivolveCost2": "-",
+            "effect": "＜Security Attack +1＞ (This Digimon checks 1\n                            additional security card.)[When Attacking] Delete 1\n                            of your opponent's Digimon with 4000 DP or less. If\n                            no Digimon was deleted by this effect, this Digimon\n                            gets +3000 DP for the turn.",
             "inheritedEffect": "-",
             "securityEffect": "-",
-            "notes": "<a href=\"/products/pack/ver16/\">▹BOOSTER BEGINNING OBSERVER [BT16]</a>"
+            "notes": "<a href=\"/products/deck/st-7.php\">▹Starter Deck, GALLANTMON [ST-7]</a>",
+            "set": {
+                "id": "st7",
+                "name": "Starter Deck Gallantmon"
+            }
         },
         ...
-    ],
-    "totalCount": 99
+    ]
 }
 ```
 

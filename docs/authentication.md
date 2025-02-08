@@ -13,6 +13,6 @@ Authentication to the API is performed via the ```x-api-key``` header. Provide y
 
 ## Example request
 ```curl
-curl --location 'https://apitcg.com/api/one-piece/cards?property=name&value=luffy' \
+curl --location 'https://apitcg.com/api/one-piece/cards?name=luffy' \
 --header 'x-api-key: MY-API-KEY' 
 ```
