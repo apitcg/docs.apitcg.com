@@ -101,7 +101,7 @@ These are the properties you can use to filter the available cards:
 ### Example request 
 
 ```cli
-https://apitcg.com/api/pokemon/cards?property=name&value=charizard
+https://apitcg.com/api/pokemon/cards?name=charizard
 ```
 
 ### Example response
@@ -194,7 +194,7 @@ These are the properties you can use to filter the available cards:
 ### Example request 
 
 ```cli
-https://apitcg.com/api/dragon-ball-fusion/cards?property=name&value=goku
+https://apitcg.com/api/dragon-ball-fusion/cards?name=goku
 ```
 
 ### Example response
@@ -314,7 +314,7 @@ These are the properties you can use to filter the available cards:
 ### Example request 
 
 ```cli
-https://apitcg.com/api/union-arena/cards?property=name&value=gon
+https://apitcg.com/api/union-arena/cards?name=gon
 ```
 
 ### Example response
