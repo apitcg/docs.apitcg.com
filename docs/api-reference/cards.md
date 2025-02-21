@@ -15,6 +15,7 @@ For now it is only available for:
 - Digimon 
 - Magic The Gathering
 - Union arena
+- Gundam
 - Star Wars (Coming soon)
 - Mitos y leyendas (Coming soon)
 
@@ -28,6 +29,7 @@ To consume this API, you must use the following URL:
 - Digimon, `https://apitcg.com/api/digimon/cards`
 - Magic, `https://apitcg.com/api/magic/cards`
 - Union Arena, `https://apitcg.com/api/union-arena/cards`
+- Gundam, `https://apitcg.com/api/gundam/cards`
 
 This API receives two parameters, `property` and `value`, where `property` is the property you want to filter and `value`, the value you want to search.
 
@@ -357,3 +359,69 @@ https://apitcg.com/api/union-arena/cards?name=gon
 These are the properties you can use to filter the available cards:
 
 - ...
+
+## Gundam
+
+### Example request 
+
+```cli
+https://apitcg.com/api/gundam/cards?name=strike
+```
+
+### Example response
+
+```json
+{
+    "page": 1,
+    "limit": 25,
+    "total": 7,
+    "totalPages": 1,
+    "data": [
+        {
+            "id": "ST04-001",
+            "code": "ST04-001",
+            "rarity": "LR",
+            "name": "Aile Strike Gundam",
+            "images": {
+                "small": "https://www.gundam-gcg.com/en/images/cards/card/ST04-001.webp",
+                "large": "https://www.gundam-gcg.com/en/images/cards/card/ST04-001.webp"
+            },
+            "level": "5",
+            "cost": "4",
+            "color": "White",
+            "cardType": "UNIT",
+            "effect": "&lt;Blocker&gt; (Rest this Unit to change the attack target to it.)<br>【When Paired･Lv.4 or Higher Pilot】Choose 1 enemy Unit with 4 or less HP. Return it to its owner's hand.<br>",
+            "zone": "Space / Earth",
+            "trait": "(Earth Alliance)",
+            "link": "[Kira Yamato]",
+            "ap": "4",
+            "hp": "4",
+            "sourceTitle": "Mobile Suit Gundam SEED",
+            "getIt": "Edition Beta",
+            "set": {
+                "id": "beta",
+                "name": "Beta"
+            }
+        }
+    ]
+}
+```
+
+### Available properties
+
+These are the properties you can use to filter the available cards:
+
+- id
+- code 
+- name
+- rarity
+- color
+- cardType
+- effect
+- zone
+- trait
+- link
+- ap
+- hp
+- sourceTitle
+- getIt
