@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API TCG — Documentation</title>
+    <meta
+      name="description"
+      content="API TCG Developer Documentation — card data for the most popular Trading Card Games (One Piece, Pokémon, Dragon Ball Fusion, Digimon, Union Arena, Gundam, Star Wars Unlimited, Riftbound and more)." />
+    <link rel="icon" href="./favicon.ico" />
+    <style>
+      body {
+        margin: 0;
+      }
+      .site-footer {
+        background: #242526;
+        color: #ebedf0;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        padding: 2rem 1.5rem;
+      }
+      /* Logo en el sidebar, al lado del selector de idioma (lo inserta el
+         script de abajo). .document-selector es el contenedor del selector
+         de documentos de Scalar, en la parte superior del sidebar. */
+      .document-selector {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .document-selector > *:not(.apitcg-brand-logo) {
+        flex: 1;
+        min-width: 0;
+      }
+      .apitcg-brand-logo {
+        height: 1.4rem;
+        width: auto;
+        flex-shrink: 0;
+      }
+      /* El logo es negro: invertirlo cuando Scalar está en modo oscuro */
+      .dark-mode .apitcg-brand-logo {
+        filter: invert(1);
+      }
+      .site-footer__brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-bottom: 1.75rem;
+      }
+      .site-footer__brand img {
+        height: 2.25rem;
+        filter: invert(1); /* logo negro → blanco sobre el footer oscuro */
+      }
+      .site-footer__brand span {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+      }
+      .site-footer__links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem 4rem;
+        justify-content: center;
+        max-width: 60rem;
+        margin: 0 auto;
+      }
+      .site-footer__col h4 {
+        margin: 0 0 0.75rem;
+        font-size: 0.95rem;
+        color: #fff;
+      }
+      .site-footer__col ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .site-footer__col li {
+        margin-bottom: 0.5rem;
+      }
+      .site-footer__col a {
+        color: #ebedf0;
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+      .site-footer__col a:hover {
+        text-decoration: underline;
+      }
+      .site-footer__copyright {
+        margin: 2rem auto 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #ebedf0;
+        max-width: 60rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <!-- Load the Scalar API Reference standalone bundle from the CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+
+    <!-- Render the reference from ./openapi.json -->
+    <script type="text/javascript">
+      Scalar.createApiReference('#app', {
+        // Dos documentos: inglés (por defecto) y español. Scalar muestra un
+        // selector en el sidebar para cambiar de idioma.
+        sources: [
+          // agent.disabled oculta el botón "Ask AI" (requiere el backend de
+          // pago de Scalar; sin él, el botón no funcionaría en producción).
+          { slug: 'en', title: 'English', url: './openapi.json', default: true, agent: { disabled: true } },
+          { slug: 'es', title: 'Español', url: './openapi.es.json', agent: { disabled: true } },
+        ],
+        theme: 'purple',
+        // Show requests as curl by default (matches the x-api-key examples)
+        defaultHttpClient: {
+          targetKey: 'shell',
+          clientKey: 'curl',
+        },
+        metaData: {
+          title: 'API TCG — Documentation',
+          description: 'Card data for the most popular Trading Card Games.',
+        },
+      })
+    </script>
+
+    <!-- Footer (same links as the previous docs site) -->
+    <footer class="site-footer">
+      <div class="site-footer__brand">
+        <img src="./logo.svg" alt="API TCG logo" />
+        <span>API TCG</span>
+      </div>
+      <div class="site-footer__links">
+        <div class="site-footer__col">
+          <h4>Docs</h4>
+          <ul>
+            <li><a href="#">Introduction</a></li>
+            <li><a href="#tag/products">API Reference</a></li>
+            <li><a href="#description/showcase">Showcase</a></li>
+            <li><a href="#description/questions">Questions</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__col">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://discord.gg/EkxEKGJzRg" target="_blank" rel="noopener">Discord</a></li>
+            <li><a href="https://patreon.com/apitcg" target="_blank" rel="noopener">Patreon</a></li>
+            <li><a href="https://github.com/apitcg" target="_blank" rel="noopener">Github</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__col">
+          <h4>More</h4>
+          <ul>
+            <li><a href="https://apitcg.com/platform" target="_blank" rel="noopener">Developer Platform</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="site-footer__copyright">
+        Copyright © <span id="footer-year"></span> API TCG, This website is not
+        created, sponsored, nor is it an official product of Bandai or Nintendo.
+      </p>
+    </footer>
+    <script>
+      document.getElementById('footer-year').textContent = new Date().getFullYear()
+
+      // Scalar no tiene opción nativa de logo: lo insertamos junto al selector
+      // de idioma (.document-selector, arriba del sidebar) cuando termina de
+      // renderizar. El observador queda activo para re-aplicarlo si Scalar
+      // re-renderiza (p. ej. al cambiar de idioma). Si la estructura cambiara
+      // en el futuro, no hace nada (la página sigue funcionando sin logo).
+      const addSidebarLogo = () => {
+        const selector = document.querySelector('.document-selector')
+        if (!selector || selector.querySelector('.apitcg-brand-logo')) return
+        const img = document.createElement('img')
+        img.src = './logo.svg'
+        img.alt = 'API TCG'
+        img.className = 'apitcg-brand-logo'
+        selector.append(img)
+      }
+      new MutationObserver(addSidebarLogo).observe(
+        document.getElementById('app'),
+        { childList: true, subtree: true },
+      )
+    </script>
+  </body>
+</html>

@@ -1,0 +1,917 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "APITCG",
+    "description": "Welcome to **API TCG**. The purpose of this API is to expose the card and product data of each TCG: games, sets/expansions, products (cards, sealed, accessories) and price history.\n\n![API TCG](./intro.png)\n\n## Available TCGs\n\n| Name | Slug |\n|------|------|\n| Digimon | `digimon` |\n| Dragon Ball Super Fusion World | `dragon-ball-super-fusion-world` |\n| Flesh and Blood | `flesh-and-blood` |\n| Gundam | `gundam` |\n| Lorcana | `lorcana` |\n| Magic | `magic` |\n| Mitos y Leyendas | `mitos-y-leyendas` |\n| One Piece | `one-piece` |\n| Pokémon | `pokemon` |\n| Riftbound | `riftbound` |\n| Selva TCG | `selva-tcg` |\n| Star Wars Unlimited | `star-wars-unlimited` |\n| Union Arena | `union-arena` |\n| Yu-Gi-Oh! | `yugioh` |\n\nUse the **slug** as the `{tcg}` value in the routes (e.g. `/api/one-piece/sets`) and in the `?tcg=` filter for products.\n\n## How to use\n\nSearch products by combining filters, for example:\n\n```\nGET /api/products?tcg=one-piece&type=card&name=luffy\n```\n\n## Pagination\n\n- `limit` — number of results per query (maximum `100`, default `25`).\n- `page` — the page you want to show of the total results.\n\nExample: `/api/products?tcg=pokemon&name=charizard&limit=50&page=2`\n\n## Showcase\n\nList of websites people are building with API TCG:\n\n1. [tcgmatch.cl](https://tcgmatch.cl)\n2. [Search Piece](https://search-piece.vercel.app/)\n\nWant to add your site? Open a pull request on [docs.apitcg.com](https://github.com/apitcg/docs.apitcg.com).\n\n## Questions\n\nIf you have any questions, you can write to: [iturra.sebastian@hotmail.com](mailto:iturra.sebastian@hotmail.com)",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Sebastián Iturra",
+      "email": "iturra.sebastian@hotmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.apitcg.com",
+      "description": "Production"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Health",
+      "description": "API status"
+    },
+    {
+      "name": "TCGs",
+      "description": "Available trading card games"
+    },
+    {
+      "name": "Sets",
+      "description": "Sets/expansions within a TCG"
+    },
+    {
+      "name": "Products",
+      "description": "Products (cards, sealed, accessories) — unified model"
+    },
+    {
+      "name": "History Prices",
+      "description": "Product price history"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Health check",
+        "description": "Checks that the API is up and returns version information.",
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "description": "API is running correctly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "APITCG funcionando correctamente"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "1.0.0"
+                    },
+                    "endpoints": {
+                      "type": "object",
+                      "properties": {
+                        "sets": { "type": "string", "example": "/api/sets" },
+                        "tcgs": { "type": "string", "example": "/api/tcgs" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tcgs": {
+      "get": {
+        "tags": ["TCGs"],
+        "summary": "List all TCGs",
+        "description": "Returns the list of registered trading card games. Each TCG's `_id` is its **slug**, used across the other routes.",
+        "operationId": "listTcgs",
+        "parameters": [
+          { "$ref": "#/components/parameters/Limit" },
+          { "$ref": "#/components/parameters/SortBy" },
+          { "$ref": "#/components/parameters/SortOrder" }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of TCGs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/TCG" }
+                    },
+                    "total": { "type": "integer", "example": 14 }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "_id": "one-piece",
+                      "name": "One Piece",
+                      "markets": { "tcgplayer": { "id": "68" } },
+                      "createdAt": "2026-01-15T10:00:00.000Z",
+                      "updatedAt": "2026-01-15T10:00:00.000Z"
+                    },
+                    {
+                      "_id": "riftbound",
+                      "name": "Riftbound",
+                      "markets": { "tcgplayer": { "id": "89" } },
+                      "createdAt": "2026-01-15T10:00:00.000Z",
+                      "updatedAt": "2026-01-15T10:00:00.000Z"
+                    }
+                  ],
+                  "total": 2
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/tcgs/{id}": {
+      "get": {
+        "tags": ["TCGs"],
+        "summary": "Get a TCG by ID",
+        "description": "Returns a TCG by its `_id` (slug).",
+        "operationId": "getTcgById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "TCG slug.",
+            "schema": { "type": "string" },
+            "example": "one-piece"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested TCG.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "$ref": "#/components/schemas/TCG" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/{tcg}/sets": {
+      "get": {
+        "tags": ["Sets"],
+        "summary": "List the sets of a TCG",
+        "description": "Returns all sets/expansions of the given TCG.",
+        "operationId": "listSets",
+        "parameters": [
+          { "$ref": "#/components/parameters/TcgSlug" },
+          { "$ref": "#/components/parameters/SortBy" },
+          { "$ref": "#/components/parameters/SortOrder" },
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "If set to `tcg`, includes the full TCG document instead of just its ID.",
+            "schema": { "type": "string", "enum": ["tcg"] }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of sets for the TCG.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Set" }
+                    },
+                    "total": { "type": "integer", "example": 12 }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "_id": "riftbound-origins-proving-grounds",
+                      "name": "Origins: Proving Grounds",
+                      "slug": "origins-proving-grounds",
+                      "tcg": "riftbound",
+                      "release_date": "2025-10-31T00:00:00.000Z",
+                      "markets": { "tcgplayer": { "id": "24219" } },
+                      "createdAt": "2026-01-15T10:00:00.000Z",
+                      "updatedAt": "2026-01-15T10:00:00.000Z"
+                    }
+                  ],
+                  "total": 1
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/{tcg}/sets/{id}": {
+      "get": {
+        "tags": ["Sets"],
+        "summary": "Get a set by ID within a TCG",
+        "description": "Returns a set by its `_id` within the given TCG.",
+        "operationId": "getSetById",
+        "parameters": [
+          { "$ref": "#/components/parameters/TcgSlug" },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Set ID (composed slug).",
+            "schema": { "type": "string" },
+            "example": "riftbound-origins-proving-grounds"
+          },
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "If set to `tcg`, includes the full TCG document.",
+            "schema": { "type": "string", "enum": ["tcg"] }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested set.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "$ref": "#/components/schemas/Set" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/products": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "List products (cards, sealed, accessories)",
+        "description": "Returns products under the unified model, with combinable filters. If you search by `name` and there is no exact match, a partial fallback search kicks in and the response includes `fallback: true`.\n\n### Examples\n\n- Search cards by name:\n\n```\nGET /api/products?tcg=one-piece&name=luffy\n```\n\n- Search by card code:\n\n```\nGET /api/products?code=OP03-070\n```\n\n- Cards of a TCG with pagination and sorting:\n\n```\nGET /api/products?tcg=pokemon&type=card&name=charizard&limit=50&page=2\n```\n\n- Sealed products of a TCG:\n\n```\nGET /api/products?tcg=riftbound&type=sealed\n```\n\n- Populating references (`tcg` and `set` as full documents):\n\n```\nGET /api/products?tcg=one-piece&name=luffy&populate=tcg,set\n```",
+        "operationId": "listProducts",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filter by product type.",
+            "schema": {
+              "type": "string",
+              "enum": ["card", "sealed", "accessory", "other"]
+            }
+          },
+          {
+            "name": "tcg",
+            "in": "query",
+            "description": "Filter by TCG (slug — see the list of available TCGs).",
+            "schema": { "type": "string" },
+            "example": "one-piece"
+          },
+          {
+            "name": "set",
+            "in": "query",
+            "description": "Filter by set (set ID/slug).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "serie",
+            "in": "query",
+            "description": "Filter by series.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "description": "Filter by brand (accessories).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "event",
+            "in": "query",
+            "description": "Filter by event (accessories).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search by name (case-insensitive).",
+            "schema": { "type": "string" },
+            "example": "luffy"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Search by card code.",
+            "schema": { "type": "string" },
+            "example": "OP03-070"
+          },
+          {
+            "name": "updatedSince",
+            "in": "query",
+            "description": "Only products updated since this date (ISO 8601).",
+            "schema": { "type": "string", "format": "date-time" }
+          },
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "Comma-separated references to include as full documents. Allowed values: `tcg`, `set`, `serie`, `brand`, `event`.",
+            "schema": { "type": "string" },
+            "example": "tcg,set"
+          },
+          { "$ref": "#/components/parameters/Limit" },
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/SortBy" },
+          { "$ref": "#/components/parameters/SortOrder" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of products.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Product" }
+                    },
+                    "total": { "type": "integer", "example": 128 },
+                    "fallback": {
+                      "type": "boolean",
+                      "description": "Present and `true` only when the partial name fallback search was used."
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "_id": 1024,
+                      "type": "card",
+                      "name": "Monkey.D.Luffy",
+                      "tcg": "one-piece",
+                      "set": "one-piece-pillars-of-strength",
+                      "code": "OP03-070",
+                      "cardNumber": "070",
+                      "attributes": {
+                        "Rarity": "R",
+                        "Color": "Purple",
+                        "Power": "7000"
+                      },
+                      "images": [
+                        {
+                          "small": "https://example.com/images/OP03-070-small.png",
+                          "large": "https://example.com/images/OP03-070-large.png"
+                        }
+                      ],
+                      "markets": {
+                        "tcgplayer": {
+                          "id": "453022",
+                          "url": "https://www.tcgplayer.com/product/453022",
+                          "prices": {
+                            "low": 0.15,
+                            "mid": 0.35,
+                            "high": 2.5,
+                            "market": 0.31
+                          }
+                        }
+                      },
+                      "createdAt": "2026-01-15T10:00:00.000Z",
+                      "updatedAt": "2026-06-01T08:30:00.000Z"
+                    }
+                  ],
+                  "total": 61
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Get a product by ID",
+        "description": "Returns a product by its numeric (auto-incremental) `_id`.",
+        "operationId": "getProductById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Numeric product ID.",
+            "schema": { "type": "integer" },
+            "example": 1024
+          },
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "Comma-separated references to include as full documents. Allowed values: `tcg`, `set`, `serie`, `brand`, `event`.",
+            "schema": { "type": "string" },
+            "example": "tcg,set"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested product.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "$ref": "#/components/schemas/Product" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/history-prices/{productId}": {
+      "get": {
+        "tags": ["History Prices"],
+        "summary": "Price history of a product",
+        "description": "Returns the daily price history of a product, sorted by date descending.",
+        "operationId": "getHistoryPrices",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "description": "Numeric product ID.",
+            "schema": { "type": "integer" },
+            "example": 1024
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "description": "Filter by market.",
+            "schema": { "type": "string", "enum": ["tcgplayer", "tcgmatch"] }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Start date (ISO 8601).",
+            "schema": { "type": "string", "format": "date" }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "End date (ISO 8601).",
+            "schema": { "type": "string", "format": "date" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of records.",
+            "schema": { "type": "integer", "default": 100 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Price history (plain array).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/HistoryPrice" }
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "TcgSlug": {
+        "name": "tcg",
+        "in": "path",
+        "required": true,
+        "description": "TCG slug (see the list of available TCGs in the introduction).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "digimon",
+            "dragon-ball-super-fusion-world",
+            "flesh-and-blood",
+            "gundam",
+            "lorcana",
+            "magic",
+            "mitos-y-leyendas",
+            "one-piece",
+            "pokemon",
+            "riftbound",
+            "selva-tcg",
+            "star-wars-unlimited",
+            "union-arena",
+            "yugioh"
+          ]
+        },
+        "example": "one-piece"
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "description": "Maximum number of results to return (1-100).",
+        "schema": {
+          "type": "integer",
+          "default": 25,
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "description": "Results page to show.",
+        "schema": { "type": "integer", "default": 1, "minimum": 1 }
+      },
+      "SortBy": {
+        "name": "sortBy",
+        "in": "query",
+        "description": "Field to sort the results by.",
+        "schema": { "type": "string", "default": "name" }
+      },
+      "SortOrder": {
+        "name": "sortOrder",
+        "in": "query",
+        "description": "Sort direction.",
+        "schema": { "type": "string", "enum": ["asc", "desc"], "default": "asc" }
+      }
+    },
+    "responses": {
+      "NotFound": {
+        "description": "Resource not found.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": false },
+                "error": { "type": "string" }
+              }
+            },
+            "example": { "success": false, "error": "Producto no encontrado" }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Internal server error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean", "example": false },
+                "error": { "type": "string" }
+              }
+            },
+            "example": { "success": false, "error": "Internal error" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "TCG": {
+        "type": "object",
+        "description": "Trading card game. The `_id` is a slug generated from the name.",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "TCG slug.",
+            "example": "one-piece"
+          },
+          "name": { "type": "string", "example": "One Piece" },
+          "description": { "type": "string" },
+          "logo": {
+            "type": "string",
+            "description": "TCG logo URL."
+          },
+          "markets": {
+            "type": "object",
+            "properties": {
+              "tcgplayer": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "example": "68" }
+                }
+              },
+              "tcgmatch": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" }
+                }
+              }
+            }
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Set": {
+        "type": "object",
+        "description": "Set/expansion within a TCG. The `_id` is composed as `{tcg}-{slug}`.",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "riftbound-origins-proving-grounds"
+          },
+          "name": {
+            "type": "string",
+            "example": "Origins: Proving Grounds"
+          },
+          "slug": {
+            "type": "string",
+            "example": "origins-proving-grounds"
+          },
+          "tcg": {
+            "type": "string",
+            "description": "Slug of the TCG it belongs to (or the full document when using `populate=tcg`).",
+            "example": "riftbound"
+          },
+          "serie": {
+            "type": "string",
+            "description": "ID of the series it belongs to (optional)."
+          },
+          "release_date": { "type": "string", "format": "date-time" },
+          "code": {
+            "type": "string",
+            "description": "Official set code (optional).",
+            "example": "OGN"
+          },
+          "logo": {
+            "type": "string",
+            "description": "Set logo URL."
+          },
+          "markets": {
+            "type": "object",
+            "properties": {
+              "tcgplayer": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "example": "24219" }
+                }
+              },
+              "tcgmatch": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" }
+                }
+              }
+            }
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "description": "Product under the unified model. Fields marked (Card), (Sealed) or (Accessory) only apply to that product type.",
+        "properties": {
+          "_id": {
+            "type": "integer",
+            "description": "Auto-incremental numeric ID.",
+            "example": 1024
+          },
+          "type": {
+            "type": "string",
+            "enum": ["card", "sealed", "accessory", "other"],
+            "description": "Product type."
+          },
+          "name": { "type": "string", "example": "Monkey.D.Luffy" },
+          "description": { "type": "string" },
+          "tcg": {
+            "type": "string",
+            "description": "TCG slug (or the full document with `populate`).",
+            "example": "one-piece"
+          },
+          "serie": {
+            "type": "string",
+            "description": "Series ID (or the full document with `populate`)."
+          },
+          "set": {
+            "type": "string",
+            "description": "Set ID (or the full document with `populate`).",
+            "example": "one-piece-pillars-of-strength"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "small": { "type": "string" },
+                "medium": { "type": "string" },
+                "large": { "type": "string" }
+              }
+            }
+          },
+          "dimensions": {
+            "type": "object",
+            "description": "Physical dimensions of the product.",
+            "properties": {
+              "unit": { "type": "string", "enum": ["cm", "mm", "in", "m"] },
+              "height": { "type": "number", "minimum": 0 },
+              "width": { "type": "number", "minimum": 0 },
+              "length": { "type": "number", "minimum": 0 }
+            }
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Weight in grams."
+          },
+          "release_date": { "type": "string", "format": "date-time" },
+          "markets": {
+            "type": "object",
+            "description": "Product data and IDs on external markets.",
+            "properties": {
+              "tcgplayer": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "example": "453022" },
+                  "url": { "type": "string" },
+                  "prices": {
+                    "type": "object",
+                    "properties": {
+                      "low": { "type": "number", "example": 0.15 },
+                      "mid": { "type": "number", "example": 0.35 },
+                      "high": { "type": "number", "example": 2.5 },
+                      "market": { "type": "number", "example": 0.31 }
+                    }
+                  }
+                }
+              },
+              "tcgmatch": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "url": { "type": "string" },
+                  "prices": {
+                    "type": "object",
+                    "properties": {
+                      "low": { "type": "number", "example": 0.15 },
+                      "mid": { "type": "number", "example": 0.35 },
+                      "high": { "type": "number", "example": 2.5 },
+                      "market": { "type": "number", "example": 0.31 }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "code": {
+            "type": "string",
+            "description": "(Card) Card code.",
+            "example": "OP03-070"
+          },
+          "cardNumber": {
+            "type": "string",
+            "description": "(Card) Card number within the set.",
+            "example": "070"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "description": "(Card) Dynamic card attributes (Rarity, Color, etc.).",
+            "example": {
+              "Rarity": "R",
+              "Color": "Purple",
+              "Power": "7000"
+            }
+          },
+          "sealed_type": {
+            "type": "string",
+            "description": "(Sealed) Sealed product subtype.",
+            "enum": [
+              "booster_box",
+              "booster_pack",
+              "starter_deck",
+              "theme_deck",
+              "structure_deck",
+              "blister",
+              "tin",
+              "collection_box",
+              "elite_trainer_box",
+              "bundle",
+              "prerelease_kit",
+              "other"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "(Accessory) Accessory condition.",
+            "enum": ["new", "used"]
+          },
+          "accesory_type": {
+            "type": "string",
+            "description": "(Accessory) Accessory subtype.",
+            "enum": [
+              "deckbox",
+              "double_deckbox",
+              "playmat",
+              "sleeve",
+              "binder",
+              "storage_box",
+              "dice",
+              "toploader",
+              "bag",
+              "other"
+            ]
+          },
+          "brand": {
+            "type": "string",
+            "description": "(Accessory) Brand ID (or the full document with `populate`)."
+          },
+          "event": {
+            "type": "string",
+            "description": "(Accessory) Event ID (or the full document with `populate`)."
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "HistoryPrice": {
+        "type": "object",
+        "description": "Daily price record of a product across markets.",
+        "properties": {
+          "_id": { "type": "string" },
+          "product": {
+            "type": "string",
+            "description": "Product ID.",
+            "example": "1024"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Record day (normalized to midnight)."
+          },
+          "markets": {
+            "type": "object",
+            "properties": {
+              "tcgplayer": {
+                "type": "object",
+                "properties": {
+                  "prices": {
+                    "type": "object",
+                    "properties": {
+                      "low": { "type": "number", "example": 0.15 },
+                      "mid": { "type": "number", "example": 0.35 },
+                      "high": { "type": "number", "example": 2.5 },
+                      "market": { "type": "number", "example": 0.31 }
+                    }
+                  }
+                }
+              },
+              "tcgmatch": {
+                "type": "object",
+                "properties": {
+                  "prices": {
+                    "type": "object",
+                    "properties": {
+                      "low": { "type": "number", "example": 0.15 },
+                      "mid": { "type": "number", "example": 0.35 },
+                      "high": { "type": "number", "example": 2.5 },
+                      "market": { "type": "number", "example": 0.31 }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}
