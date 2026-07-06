@@ -6,9 +6,8 @@ It is a **static site** — no build step. The whole thing is:
 
 | File              | Purpose                                                      |
 | ----------------- | ------------------------------------------------------------ |
-| `index.html`      | Loads the Scalar API Reference from the CDN (EN/ES sources). |
-| `openapi.json`    | OpenAPI spec in **English** (default document).              |
-| `openapi.es.json` | OpenAPI spec in **Spanish**.                                 |
+| `index.html`      | Loads the Scalar API Reference from the CDN.                 |
+| `openapi.json`    | OpenAPI spec (English).                                      |
 | `logo.svg`        | API TCG logo (next to the title and in the footer).          |
 | `intro.png`       | Banner shown in the introduction.                            |
 | `favicon.ico`     | Browser tab icon.                                            |
@@ -16,9 +15,8 @@ It is a **static site** — no build step. The whole thing is:
 
 ## Editing the docs
 
-Edit **`openapi.json`** (English) and **`openapi.es.json`** (Spanish) — keep
-both in sync. Everything the site shows — endpoints, parameters, examples —
-comes from those files. No Markdown, no config.
+Edit **`openapi.json`**. Everything the site shows — endpoints, parameters,
+examples — comes from that file. No Markdown, no config.
 
 ## Preview locally
 

@@ -18,17 +18,12 @@
         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
         padding: 2rem 1.5rem;
       }
-      /* Logo en el sidebar, al lado del selector de idioma (lo inserta el
-         script de abajo). .document-selector es el contenedor del selector
-         de documentos de Scalar, en la parte superior del sidebar. */
-      .document-selector {
+      /* Logo en la parte superior del sidebar (lo inserta el script de abajo). */
+      .sidebar-header {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-      }
-      .document-selector > *:not(.apitcg-brand-logo) {
-        flex: 1;
-        min-width: 0;
+        padding: 0.75rem 1rem;
       }
       .apitcg-brand-logo {
         height: 1.4rem;
@@ -102,14 +97,10 @@
     <!-- Render the reference from ./openapi.json -->
     <script type="text/javascript">
       Scalar.createApiReference('#app', {
-        // Dos documentos: inglés (por defecto) y español. Scalar muestra un
-        // selector en el sidebar para cambiar de idioma.
-        sources: [
-          // agent.disabled oculta el botón "Ask AI" (requiere el backend de
-          // pago de Scalar; sin él, el botón no funcionaría en producción).
-          { slug: 'en', title: 'English', url: './openapi.json', default: true, agent: { disabled: true } },
-          { slug: 'es', title: 'Español', url: './openapi.es.json', agent: { disabled: true } },
-        ],
+        url: './openapi.json',
+        // agent.disabled oculta el botón "Ask AI" (requiere el backend de
+        // pago de Scalar; sin él, el botón no funcionaría en producción).
+        agent: { disabled: true },
         theme: 'purple',
         // Show requests as curl by default (matches the x-api-key examples)
         defaultHttpClient: {
@@ -162,19 +153,25 @@
     <script>
       document.getElementById('footer-year').textContent = new Date().getFullYear()
 
-      // Scalar no tiene opción nativa de logo: lo insertamos junto al selector
-      // de idioma (.document-selector, arriba del sidebar) cuando termina de
-      // renderizar. El observador queda activo para re-aplicarlo si Scalar
-      // re-renderiza (p. ej. al cambiar de idioma). Si la estructura cambiara
-      // en el futuro, no hace nada (la página sigue funcionando sin logo).
+      // Scalar no tiene opción nativa de logo: lo insertamos arriba del sidebar
+      // cuando termina de renderizar. El observador queda activo para
+      // re-aplicarlo si Scalar re-renderiza. Si la estructura cambiara en el
+      // futuro, no hace nada (la página sigue funcionando sin logo).
       const addSidebarLogo = () => {
-        const selector = document.querySelector('.document-selector')
-        if (!selector || selector.querySelector('.apitcg-brand-logo')) return
+        if (document.querySelector('.apitcg-brand-logo')) return
+        const sidebar = document.querySelector('.sidebar')
+        if (!sidebar) return
+        let header = sidebar.querySelector('.sidebar-header')
+        if (!header) {
+          header = document.createElement('div')
+          header.className = 'sidebar-header'
+          sidebar.prepend(header)
+        }
         const img = document.createElement('img')
         img.src = './logo.svg'
         img.alt = 'API TCG'
         img.className = 'apitcg-brand-logo'
-        selector.append(img)
+        header.append(img)
       }
       new MutationObserver(addSidebarLogo).observe(
         document.getElementById('app'),
