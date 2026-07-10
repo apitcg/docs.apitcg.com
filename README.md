@@ -1,4 +1,4 @@
-# docs.apitcg.com
+# Documentation docs.apitcg.com
 
 Public documentation for **API TCG**, rendered with [Scalar](https://scalar.com).
 
