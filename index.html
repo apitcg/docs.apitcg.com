@@ -102,6 +102,13 @@
         // pago de Scalar; sin él, el botón no funcionaría en producción).
         agent: { disabled: true },
         theme: 'purple',
+        // Los schemas siguen alimentando los ejemplos de respuesta de cada
+        // endpoint, pero no se muestra la sección "Models" con los modelos.
+        hideModels: true,
+        // Preselecciona x-api-key en el panel de autenticación
+        authentication: {
+          preferredSecurityScheme: 'apiKey',
+        },
         // Show requests as curl by default (matches the x-api-key examples)
         defaultHttpClient: {
           targetKey: 'shell',
@@ -125,6 +132,7 @@
           <h4>Docs</h4>
           <ul>
             <li><a href="#">Introduction</a></li>
+            <li><a href="#description/authentication">Authentication</a></li>
             <li><a href="#tag/products">API Reference</a></li>
             <li><a href="#description/showcase">Showcase</a></li>
             <li><a href="#description/questions">Questions</a></li>
@@ -134,7 +142,6 @@
           <h4>Community</h4>
           <ul>
             <li><a href="https://discord.gg/EkxEKGJzRg" target="_blank" rel="noopener">Discord</a></li>
-            <li><a href="https://patreon.com/apitcg" target="_blank" rel="noopener">Patreon</a></li>
             <li><a href="https://github.com/apitcg" target="_blank" rel="noopener">Github</a></li>
           </ul>
         </div>
