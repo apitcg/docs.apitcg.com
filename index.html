@@ -105,6 +105,9 @@
         // Los schemas siguen alimentando los ejemplos de respuesta de cada
         // endpoint, pero no se muestra la sección "Models" con los modelos.
         hideModels: true,
+        // Sin esto Scalar abre el primer tag (Health). Con false se queda
+        // en la Introduction (info.description) al entrar a la página.
+        defaultOpenFirstTag: false,
         // Preselecciona x-api-key en el panel de autenticación
         authentication: {
           preferredSecurityScheme: 'apiKey',
