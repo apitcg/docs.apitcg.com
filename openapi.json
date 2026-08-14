@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "APITCG",
-    "description": "Welcome to **API TCG**. The purpose of this API is to expose the card and product data of each TCG: games, sets/expansions, products (cards, sealed, accessories) and price history.\n\n![API TCG](./intro.png)\n\n## Authentication\n\nAll data endpoints require an **API key**. Getting one is free:\n\n1. Create an account at [apitcg.com/register](https://apitcg.com/register) (or sign in at [apitcg.com/login](https://apitcg.com/login)).\n2. Open the [Developer Platform](https://apitcg.com/platform) and go to **[API Key](https://apitcg.com/platform/api-key)** — your key is shown there.\n3. Send it in the `x-api-key` header on every request:\n\n```bash\ncurl 'https://api.apitcg.com/api/products?tcg=one-piece&name=luffy' \\\n  -H 'x-api-key: YOUR_API_KEY'\n```\n\nJavaScript example:\n\n```js\nconst res = await fetch(\n  'https://api.apitcg.com/api/products?tcg=one-piece&name=luffy',\n  { headers: { 'x-api-key': process.env.APITCG_API_KEY } }\n);\nconst body = await res.json();\n```\n\nYou can paste your key in the **Authentication** panel of this documentation to try endpoints live.\n\nKeep your API key secret. If you think it was exposed, write to [support@apitcg.com](mailto:support@apitcg.com).\n\n### Authentication errors\n\n| Status | Meaning |\n|--------|---------|\n| `401 Unauthorized` | Missing or invalid API key. |\n| `429 Too Many Requests` | Too many requests. |\n\n## Available TCGs\n\n| Name | Slug |\n|------|------|\n| Digimon | `digimon` |\n| Dragon Ball Super Fusion World | `dragon-ball-super-fusion-world` |\n| Flesh and Blood | `flesh-and-blood` |\n| Gundam | `gundam` |\n| Lorcana | `lorcana` |\n| Magic | `magic` |\n| Mitos y Leyendas | `mitos-y-leyendas` |\n| One Piece | `one-piece` |\n| Pokémon | `pokemon` |\n| Riftbound | `riftbound` |\n| Selva TCG | `selva-tcg` |\n| Star Wars Unlimited | `star-wars-unlimited` |\n| Union Arena | `union-arena` |\n| Yu-Gi-Oh! | `yugioh` |\n\nUse the **slug** as the `{tcg}` value in the routes (e.g. `/api/one-piece/sets`) and in the `?tcg=` filter for products.\n\n## How to use\n\nSearch products by combining filters, for example:\n\n```\nGET /api/products?tcg=one-piece&type=card&name=luffy\n```\n\n## Pagination\n\n- `limit` — number of results per query (maximum `100`, default `25`).\n- `page` — the page you want to show of the total results.\n\nExample: `/api/products?tcg=pokemon&name=charizard&limit=50&page=2`\n\n## Showcase\n\nList of websites people are building with API TCG:\n\n1. [tcgmatch.cl](https://tcgmatch.cl)\n2. [Search Piece](https://search-piece.vercel.app/)\n\nWant to add your site? Open a pull request on [docs.apitcg.com](https://github.com/apitcg/docs.apitcg.com).\n\n## Questions\n\nIf you have any questions, you can write to: [support@apitcg.com](mailto:support@apitcg.com)",
+    "description": "Welcome to **API TCG**. The purpose of this API is to expose the card and product data of each TCG: games, sets/expansions, products (cards, sealed, accessories) and price history.\n\n![API TCG](./intro.png)\n\n## Authentication\n\nAll data endpoints require an **API key**. Getting one is free:\n\n1. Create an account at [apitcg.com/register](https://apitcg.com/register) (or sign in at [apitcg.com/login](https://apitcg.com/login)).\n2. Open the [Developer Platform](https://apitcg.com/platform) and go to **[API Key](https://apitcg.com/platform/api-key)** — your key is shown there.\n3. Send it in the `x-api-key` header on every request:\n\n```bash\ncurl 'https://api.apitcg.com/api/products?tcg=one-piece&name=luffy' \\\n  -H 'x-api-key: YOUR_API_KEY'\n```\n\nJavaScript example:\n\n```js\nconst res = await fetch(\n  'https://api.apitcg.com/api/products?tcg=one-piece&name=luffy',\n  { headers: { 'x-api-key': process.env.APITCG_API_KEY } }\n);\nconst body = await res.json();\n```\n\nYou can paste your key in the **Authentication** panel of this documentation to try endpoints live.\n\nKeep your API key secret. If you think it was exposed, write to [support@apitcg.com](mailto:support@apitcg.com).\n\n### Authentication errors\n\n| Status | Meaning |\n|--------|---------|\n| `401 Unauthorized` | Missing or invalid API key. |\n| `429 Too Many Requests` | Too many requests. |\n\n## Available TCGs\n\n| Name | Slug |\n|------|------|\n| Cardfight Vanguard | `cardfight-vanguard` |\n| Digimon | `digimon` |\n| Dragon Ball Super Fusion World | `dragon-ball-super-fusion-world` |\n| Dragon Ball Super Masters | `dragon-ball-super-masters` |\n| Flesh and Blood | `flesh-and-blood` |\n| Gundam | `gundam` |\n| hololive | `hololive` |\n| Lorcana | `lorcana` |\n| Magic | `magic` |\n| Mitos y Leyendas | `mitos-y-leyendas` |\n| One Piece | `one-piece` |\n| Pokémon | `pokemon` |\n| Riftbound | `riftbound` |\n| Star Wars Unlimited | `star-wars-unlimited` |\n| Union Arena | `union-arena` |\n| Yu-Gi-Oh | `yugioh` |\n\nUse the **slug** as the `{tcg}` value in the routes (e.g. `/api/one-piece/sets`) and in the `?tcg=` filter for products.\n\n## How to use\n\nSearch products by combining filters, for example:\n\n```\nGET /api/products?tcg=one-piece&type=card&name=luffy\n```\n\nThe `tcg` and `set` references come back as **full documents**, not as IDs — you do not need `populate` for them. The slug/ID of each one is its `_id`.\n\n## Product attributes\n\nApart from the fixed fields (`name`, `images`, `markets`…), every product carries an `attributes` object: a map of strings whose **keys depend on the game**. A Lorcana card has `Cost Ink` and `Lore Value`; a Magic card has `OracleText`, `P` and `T`. Values may contain light HTML (`<em>`, `<strong>`, `<br>`), because that is how the source publishes them.\n\nTwo keys are worth calling out:\n\n- **`Artist`** — on a `card`, the illustrator of the card.\n- **`Description`** — on a `card`, its rules text; on a `sealed` product, the description of the product (what the box contains, print run notes, etc.).\n\n### Artist\n\n`attributes.Artist` holds the illustrator of the card. It is filled in progressively, so **not every card has it**:\n\n- **Games that publish the artist:** `digimon`, `flesh-and-blood`, `gundam`, `lorcana`, `magic`, `one-piece`, `pokemon`, `riftbound`, `star-wars-unlimited`.\n- **Games that do not publish it:** `cardfight-vanguard`, `dragon-ball-super-fusion-world`, `dragon-ball-super-masters`, `hololive`, `mitos-y-leyendas`, `union-arena`, `yugioh`.\n\nEven in the games that do publish it the coverage is not 100% (in `pokemon` and `gundam` it sits above half the catalog), so treat `Artist` as an optional key: check for it before reading it.\n\nThere is no `?artist=` filter — the field travels inside `attributes`.\n\n### Sealed product descriptions\n\n`attributes.Description` on a `type: \"sealed\"` product is the description of the sealed product itself. Most of the sealed catalog already has it:\n\n```\nGET /api/products?tcg=pokemon&type=sealed&limit=1\n```\n\n```json\n{\n  \"_id\": 50733,\n  \"type\": \"sealed\",\n  \"name\": \"10th Movie Commemoration Set\",\n  \"attributes\": {\n    \"Description\": \"To commemorate the 10th Pokémon movie release in Japan, a special card album was released containing 11 cards…\"\n  }\n}\n```\n\n## Pagination\n\n- `limit` — number of results per query (maximum `100`, default `25`).\n- `page` — the page you want to show of the total results.\n\nExample: `/api/products?tcg=pokemon&name=charizard&limit=50&page=2`\n\n## Showcase\n\nList of websites people are building with API TCG:\n\n1. [tcgmatch.cl](https://tcgmatch.cl)\n2. [Search Piece](https://search-piece.vercel.app/)\n\nWant to add your site? Open a pull request on [docs.apitcg.com](https://github.com/apitcg/docs.apitcg.com).\n\n## Questions\n\nIf you have any questions, you can write to: [support@apitcg.com](mailto:support@apitcg.com)",
     "version": "1.0.0",
     "contact": {
       "name": "API TCG Support",
@@ -115,7 +115,8 @@
                     },
                     "total": {
                       "type": "integer",
-                      "example": 14
+                      "description": "Number of TCGs returned (this endpoint does not paginate).",
+                      "example": 16
                     }
                   }
                 },
@@ -125,24 +126,33 @@
                     {
                       "_id": "one-piece",
                       "name": "One Piece",
+                      "description": "One Piece Card Game",
                       "markets": {
                         "tcgplayer": {
                           "id": "68"
+                        },
+                        "tcgmatch": {
+                          "id": "one-piece"
                         }
                       },
-                      "createdAt": "2026-01-15T10:00:00.000Z",
-                      "updatedAt": "2026-01-15T10:00:00.000Z"
+                      "createdAt": "2026-03-25T21:08:50.388Z",
+                      "updatedAt": "2026-03-25T23:46:15.889Z"
                     },
                     {
                       "_id": "riftbound",
                       "name": "Riftbound",
+                      "description": "Riftbound TCG",
+                      "logo": "https://www.laughingdragonevents.com/wp-content/uploads/2025/10/Riftbound_Logo_HeroTextured_RGB.png",
                       "markets": {
                         "tcgplayer": {
                           "id": "89"
+                        },
+                        "tcgmatch": {
+                          "id": "riftbound"
                         }
                       },
-                      "createdAt": "2026-01-15T10:00:00.000Z",
-                      "updatedAt": "2026-01-15T10:00:00.000Z"
+                      "createdAt": "2026-03-25T21:08:50.330Z",
+                      "updatedAt": "2026-03-25T23:46:16.941Z"
                     }
                   ],
                   "total": 2
@@ -267,6 +277,7 @@
                     },
                     "total": {
                       "type": "integer",
+                      "description": "Number of sets returned (this endpoint does not paginate).",
                       "example": 12
                     }
                   }
@@ -275,18 +286,22 @@
                   "success": true,
                   "data": [
                     {
-                      "_id": "riftbound-origins-proving-grounds",
-                      "name": "Origins: Proving Grounds",
-                      "slug": "origins-proving-grounds",
+                      "_id": "riftbound-origins",
+                      "name": "Origins",
+                      "slug": "origins",
                       "tcg": "riftbound",
+                      "code": "OGN",
                       "release_date": "2025-10-31T00:00:00.000Z",
                       "markets": {
                         "tcgplayer": {
-                          "id": "24219"
+                          "id": "24344"
+                        },
+                        "tcgmatch": {
+                          "id": "riftbound-origins"
                         }
                       },
-                      "createdAt": "2026-01-15T10:00:00.000Z",
-                      "updatedAt": "2026-01-15T10:00:00.000Z"
+                      "createdAt": "2026-03-25T21:08:52.225Z",
+                      "updatedAt": "2026-08-14T00:00:01.398Z"
                     }
                   ],
                   "total": 1
@@ -384,13 +399,13 @@
           "Products"
         ],
         "summary": "List products (cards, sealed, accessories)",
-        "description": "Returns products with combinable filters. If you search by `name` and there is no exact match, a partial fallback search kicks in and the response includes `fallback: true`.\n\n### Examples\n\n- Search cards by name:\n\n```\nGET /api/products?tcg=one-piece&name=luffy\n```\n\n- Search by card code:\n\n```\nGET /api/products?code=OP03-070\n```\n\n- Cards of a TCG with pagination and sorting:\n\n```\nGET /api/products?tcg=pokemon&type=card&name=charizard&limit=50&page=2\n```\n\n- Sealed products of a TCG:\n\n```\nGET /api/products?tcg=riftbound&type=sealed\n```\n\n- Populating references (`tcg` and `set` as full documents):\n\n```\nGET /api/products?tcg=one-piece&name=luffy&populate=tcg,set\n```",
+        "description": "Returns products with combinable filters. If you search by `name` and there is no exact match, a partial fallback search kicks in and the response includes `fallback: true`.\n\nThe `tcg` and `set` references always come back as **full documents** — you do not need `populate` for them.\n\n### Examples\n\n- Search cards by name:\n\n```\nGET /api/products?tcg=one-piece&name=luffy\n```\n\n- Search by card code:\n\n```\nGET /api/products?code=OP03-070\n```\n\n- Cards of a TCG with pagination and sorting:\n\n```\nGET /api/products?tcg=pokemon&type=card&name=charizard&limit=50&page=2\n```\n\n- Sealed products of a TCG (their description travels in `attributes.Description`):\n\n```\nGET /api/products?tcg=riftbound&type=sealed\n```\n\n- The illustrator of a card is in `attributes.Artist`, when the game publishes it:\n\n```\nGET /api/products?tcg=lorcana&type=card&name=elsa\n```\n\nSee [Product attributes](#description/product-attributes) for what `attributes` carries.",
         "operationId": "listProducts",
         "parameters": [
           {
             "name": "type",
             "in": "query",
-            "description": "Filter by product type.",
+            "description": "Filter by product type. The catalog currently holds `card` and `sealed` products.",
             "schema": {
               "type": "string",
               "enum": [
@@ -421,23 +436,7 @@
           {
             "name": "serie",
             "in": "query",
-            "description": "Filter by series.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "brand",
-            "in": "query",
-            "description": "Filter by brand (accessories).",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "event",
-            "in": "query",
-            "description": "Filter by event (accessories).",
+            "description": "Filter by series (series ID). Series are not in use in the current catalog.",
             "schema": {
               "type": "string"
             }
@@ -472,11 +471,11 @@
           {
             "name": "populate",
             "in": "query",
-            "description": "Comma-separated references to include as full documents. Allowed values: `tcg`, `set`, `serie`, `brand`, `event`.",
+            "description": "Comma-separated references to include as full documents. Allowed values: `tcg`, `set`, `serie`. `tcg` and `set` already come populated by default, so in practice you only need this for `serie`.",
             "schema": {
               "type": "string"
             },
-            "example": "tcg,set"
+            "example": "serie"
           },
           {
             "$ref": "#/components/parameters/Limit"
@@ -519,45 +518,145 @@
                     }
                   }
                 },
-                "example": {
-                  "success": true,
-                  "data": [
-                    {
-                      "_id": 1024,
-                      "type": "card",
-                      "name": "Monkey.D.Luffy",
-                      "tcg": "one-piece",
-                      "set": "one-piece-pillars-of-strength",
-                      "code": "OP03-070",
-                      "cardNumber": "070",
-                      "attributes": {
-                        "Rarity": "R",
-                        "Color": "Purple",
-                        "Power": "7000"
-                      },
-                      "images": [
+                "examples": {
+                  "card": {
+                    "summary": "Card (attributes.Artist)",
+                    "value": {
+                      "success": true,
+                      "data": [
                         {
-                          "small": "https://example.com/images/OP03-070-small.png",
-                          "large": "https://example.com/images/OP03-070-large.png"
+                          "_id": 9804,
+                          "type": "card",
+                          "name": "Monkey.D.Luffy",
+                          "tcg": {
+                            "_id": "one-piece",
+                            "name": "One Piece",
+                            "description": "One Piece Card Game",
+                            "markets": {
+                              "tcgplayer": {
+                                "id": "68"
+                              },
+                              "tcgmatch": {
+                                "id": "one-piece"
+                              }
+                            }
+                          },
+                          "set": {
+                            "_id": "one-piece-pillars-of-strength",
+                            "name": "Pillars of Strength",
+                            "slug": "pillars-of-strength",
+                            "tcg": "one-piece",
+                            "code": "OP03",
+                            "release_date": "2023-06-30T00:00:00.000Z",
+                            "markets": {
+                              "tcgplayer": {
+                                "id": "22890"
+                              },
+                              "tcgmatch": {
+                                "id": "one-piece-pillars-of-strength"
+                              }
+                            }
+                          },
+                          "code": "OP03-070",
+                          "images": [
+                            {
+                              "small": "https://tcgplayer-cdn.tcgplayer.com/product/500009_200w.jpg",
+                              "medium": "https://tcgplayer-cdn.tcgplayer.com/product/500009_400w.jpg",
+                              "large": "https://tcgplayer-cdn.tcgplayer.com/product/500009_in_1000x1000.jpg"
+                            }
+                          ],
+                          "attributes": {
+                            "Rarity": "R",
+                            "Number": "OP03-070",
+                            "Description": "[On Play] DON!! -1 <em>(You may return the specified number of DON!! cards from your field to your DON!! deck.)</em> <strong>You may trash 1 Character card with a cost of 5 from your hand</strong>: This Character gains [Rush] during this turn. <em>(This card can attack on the turn in which it is played.)</em>",
+                            "Color": "Purple",
+                            "CardType": "Character",
+                            "Cost": "6",
+                            "Power": "7000",
+                            "Subtypes": "Straw Hat Crew;Water Seven",
+                            "Attribute": "Strike",
+                            "Artist": "Nekobayashi"
+                          },
+                          "markets": {
+                            "tcgplayer": {
+                              "id": "500009",
+                              "url": "https://www.tcgplayer.com/product/500009/one-piece-card-game-pillars-of-strength-monkeydluffy",
+                              "prices": {
+                                "low": 0.1,
+                                "mid": 0.35,
+                                "high": 100,
+                                "market": 0.29
+                              }
+                            }
+                          },
+                          "createdAt": "2026-03-25T22:37:10.800Z",
+                          "updatedAt": "2026-08-14T01:12:32.376Z"
                         }
                       ],
-                      "markets": {
-                        "tcgplayer": {
-                          "id": "453022",
-                          "url": "https://www.tcgplayer.com/product/453022",
-                          "prices": {
-                            "low": 0.15,
-                            "mid": 0.35,
-                            "high": 2.5,
-                            "market": 0.31
-                          }
-                        }
-                      },
-                      "createdAt": "2026-01-15T10:00:00.000Z",
-                      "updatedAt": "2026-06-01T08:30:00.000Z"
+                      "total": 3
                     }
-                  ],
-                  "total": 61
+                  },
+                  "sealed": {
+                    "summary": "Sealed product (attributes.Description)",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "_id": 50733,
+                          "type": "sealed",
+                          "name": "10th Movie Commemoration Set",
+                          "tcg": {
+                            "_id": "pokemon",
+                            "name": "Pokémon",
+                            "description": "Pokémon TCG",
+                            "markets": {
+                              "tcgplayer": {
+                                "id": "3"
+                              },
+                              "tcgmatch": {
+                                "id": "pokemon"
+                              }
+                            }
+                          },
+                          "set": {
+                            "_id": "pokemon-miscellaneous-cards-products",
+                            "name": "Miscellaneous Cards & Products",
+                            "slug": "miscellaneous-cards-products",
+                            "tcg": "pokemon",
+                            "code": "MCAP",
+                            "markets": {
+                              "tcgplayer": {
+                                "id": "2374"
+                              },
+                              "tcgmatch": {
+                                "id": "pokemon-miscellaneous-cards-products"
+                              }
+                            }
+                          },
+                          "images": [
+                            {
+                              "small": "https://tcgplayer-cdn.tcgplayer.com/product/266002_200w.jpg",
+                              "medium": "https://tcgplayer-cdn.tcgplayer.com/product/266002_400w.jpg",
+                              "large": "https://tcgplayer-cdn.tcgplayer.com/product/266002_in_1000x1000.jpg"
+                            }
+                          ],
+                          "attributes": {
+                            "Description": "<strong>Please Note: The product you receive will be in Japanese. Japanese cards from this product are <em>Not Tournament Legal</em> in English Pokemon TCG Tournaments.</strong>\r\n<br><br>To commemorate the 10th Pokémon movie release in Japan, a special card album was released containing 11 cards with central Pokémon from the previous nine movies.",
+                            "CardText": "<strong>Please Note: The product you receive will be in Japanese. Japanese cards from this product are <em>Not Tournament Legal</em> in English Pokemon TCG Tournaments.</strong>\r\n<br><br>To commemorate the 10th Pokémon movie release in Japan, a special card album was released containing 11 cards with central Pokémon from the previous nine movies."
+                          },
+                          "markets": {
+                            "tcgplayer": {
+                              "id": "266002",
+                              "url": "https://www.tcgplayer.com/product/266002/pokemon-miscellaneous-cards-and-products-"
+                            }
+                          },
+                          "createdAt": "2026-03-25T22:39:10.966Z",
+                          "updatedAt": "2026-08-14T00:17:55.139Z"
+                        }
+                      ],
+                      "total": 4740
+                    }
+                  }
                 }
               }
             }
@@ -596,11 +695,11 @@
           {
             "name": "populate",
             "in": "query",
-            "description": "Comma-separated references to include as full documents. Allowed values: `tcg`, `set`, `serie`, `brand`, `event`.",
+            "description": "Comma-separated references to include as full documents. Allowed values: `tcg`, `set`, `serie`. `tcg` and `set` already come populated by default.",
             "schema": {
               "type": "string"
             },
-            "example": "tcg,set"
+            "example": "serie"
           }
         ],
         "responses": {
@@ -644,7 +743,7 @@
           "History Prices"
         ],
         "summary": "Price history of a product",
-        "description": "Returns the daily price history of a product, sorted by date descending.",
+        "description": "Returns the daily price history of a product, sorted by date descending. Each record carries the prices of every market under `markets`.",
         "operationId": "getHistoryPrices",
         "parameters": [
           {
@@ -656,18 +755,6 @@
               "type": "integer"
             },
             "example": 1024
-          },
-          {
-            "name": "market",
-            "in": "query",
-            "description": "Filter by market.",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "tcgplayer",
-                "tcgmatch"
-              ]
-            }
           },
           {
             "name": "from",
@@ -742,17 +829,19 @@
         "schema": {
           "type": "string",
           "enum": [
+            "cardfight-vanguard",
             "digimon",
             "dragon-ball-super-fusion-world",
+            "dragon-ball-super-masters",
             "flesh-and-blood",
             "gundam",
+            "hololive",
             "lorcana",
             "magic",
             "mitos-y-leyendas",
             "one-piece",
             "pokemon",
             "riftbound",
-            "selva-tcg",
             "star-wars-unlimited",
             "union-arena",
             "yugioh"
@@ -1021,7 +1110,7 @@
       },
       "Product": {
         "type": "object",
-        "description": "Product resource. Fields marked (Card), (Sealed) or (Accessory) only apply to that product type.",
+        "description": "Product resource. Fields marked (Card), (Sealed) or (Accessory) only apply to that product type. The catalog currently holds `card` and `sealed` products; fields marked _(not in use)_ exist in the model but the catalog does not fill them today.",
         "properties": {
           "_id": {
             "type": "integer",
@@ -1036,28 +1125,35 @@
               "accessory",
               "other"
             ],
-            "description": "Product type."
+            "description": "Product type. The catalog currently holds `card` and `sealed` products."
           },
           "name": {
             "type": "string",
             "example": "Monkey.D.Luffy"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "Top-level product description _(not in use)_. The description of a sealed product travels in `attributes.Description`."
           },
           "tcg": {
-            "type": "string",
-            "description": "TCG slug (or the full document with `populate`).",
-            "example": "one-piece"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TCG"
+              }
+            ],
+            "description": "TCG the product belongs to. The API returns the **full document**; its `_id` is the slug (e.g. `one-piece`)."
           },
           "serie": {
             "type": "string",
-            "description": "Series ID (or the full document with `populate`)."
+            "description": "Series ID (or the full document with `populate=serie`) _(not in use)_."
           },
           "set": {
-            "type": "string",
-            "description": "Set ID (or the full document with `populate`).",
-            "example": "one-piece-pillars-of-strength"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Set"
+              }
+            ],
+            "description": "Set the product belongs to. The API returns the **full document**; its `_id` is the set ID (e.g. `one-piece-pillars-of-strength`). Absent or `null` when the product is not linked to a set."
           },
           "images": {
             "type": "array",
@@ -1078,7 +1174,7 @@
           },
           "dimensions": {
             "type": "object",
-            "description": "Physical dimensions of the product.",
+            "description": "Physical dimensions of the product _(not in use)_.",
             "properties": {
               "unit": {
                 "type": "string",
@@ -1106,11 +1202,12 @@
           "weight": {
             "type": "number",
             "minimum": 0,
-            "description": "Weight in grams."
+            "description": "Weight in grams _(not in use)_."
           },
           "release_date": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Release date of the product _(not in use)_. The release date of the set is in `set.release_date`."
           },
           "markets": {
             "type": "object",
@@ -1190,24 +1287,26 @@
           },
           "cardNumber": {
             "type": "string",
-            "description": "(Card) Card number within the set.",
-            "example": "070"
+            "description": "(Card) Card number within the set _(not in use)_. The number travels in `attributes.Number`."
           },
           "attributes": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "(Card) Dynamic card attributes (Rarity, Color, etc.).",
+            "description": "Dynamic attributes of the product. The keys depend on the game (see [Product attributes](#description/product-attributes)); values may contain light HTML.\n\n- **(Card)** `Artist` — illustrator of the card, when the game publishes it.\n- **(Card)** `Description` — the rules text of the card.\n- **(Sealed)** `Description` — the description of the sealed product.",
             "example": {
               "Rarity": "R",
+              "Number": "OP03-070",
               "Color": "Purple",
-              "Power": "7000"
+              "CardType": "Character",
+              "Power": "7000",
+              "Artist": "Nekobayashi"
             }
           },
           "sealed_type": {
             "type": "string",
-            "description": "(Sealed) Sealed product subtype.",
+            "description": "(Sealed) Sealed product subtype _(not in use)_.",
             "enum": [
               "booster_box",
               "booster_pack",
@@ -1225,7 +1324,7 @@
           },
           "status": {
             "type": "string",
-            "description": "(Accessory) Accessory condition.",
+            "description": "(Accessory) Accessory condition _(not in use)_.",
             "enum": [
               "new",
               "used"
@@ -1233,7 +1332,7 @@
           },
           "accesory_type": {
             "type": "string",
-            "description": "(Accessory) Accessory subtype.",
+            "description": "(Accessory) Accessory subtype _(not in use)_.",
             "enum": [
               "deckbox",
               "double_deckbox",
@@ -1246,14 +1345,6 @@
               "bag",
               "other"
             ]
-          },
-          "brand": {
-            "type": "string",
-            "description": "(Accessory) Brand ID (or the full document with `populate`)."
-          },
-          "event": {
-            "type": "string",
-            "description": "(Accessory) Event ID (or the full document with `populate`)."
           },
           "createdAt": {
             "type": "string",
