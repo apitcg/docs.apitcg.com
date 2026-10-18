@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "APITCG",
-    "description": "Welcome to **API TCG**. The purpose of this API is to expose the card and product data of each TCG: games, sets/expansions, products (cards, sealed, accessories) and price history.\n\n![API TCG](./intro.png)\n\n## Authentication\n\nAll data endpoints require an **API key**. Getting one is free:\n\n1. Create an account at [apitcg.com/register](https://apitcg.com/register) (or sign in at [apitcg.com/login](https://apitcg.com/login)).\n2. Open the [Developer Platform](https://apitcg.com/platform) and go to **[API Key](https://apitcg.com/platform/api-key)** — your key is shown there.\n3. Send it in the `x-api-key` header on every request:\n\n```bash\ncurl 'https://api.apitcg.com/api/products?tcg=one-piece&name=luffy' \\\n  -H 'x-api-key: YOUR_API_KEY'\n```\n\nJavaScript example:\n\n```js\nconst res = await fetch(\n  'https://api.apitcg.com/api/products?tcg=one-piece&name=luffy',\n  { headers: { 'x-api-key': process.env.APITCG_API_KEY } }\n);\nconst body = await res.json();\n```\n\nYou can paste your key in the **Authentication** panel of this documentation to try endpoints live.\n\nKeep your API key secret. If you think it was exposed, write to [support@apitcg.com](mailto:support@apitcg.com).\n\n### Authentication errors\n\n| Status | Meaning |\n|--------|---------|\n| `401 Unauthorized` | Missing or invalid API key. |\n| `429 Too Many Requests` | Too many requests. |\n\n## Available TCGs\n\n| Name | Slug |\n|------|------|\n| Cardfight Vanguard | `cardfight-vanguard` |\n| Digimon | `digimon` |\n| Dragon Ball Super Fusion World | `dragon-ball-super-fusion-world` |\n| Dragon Ball Super Masters | `dragon-ball-super-masters` |\n| Flesh and Blood | `flesh-and-blood` |\n| Gundam | `gundam` |\n| hololive | `hololive` |\n| Lorcana | `lorcana` |\n| Magic | `magic` |\n| Mitos y Leyendas | `mitos-y-leyendas` |\n| One Piece | `one-piece` |\n| Pokémon | `pokemon` |\n| Riftbound | `riftbound` |\n| Star Wars Unlimited | `star-wars-unlimited` |\n| Union Arena | `union-arena` |\n| Yu-Gi-Oh | `yugioh` |\n\nUse the **slug** as the `{tcg}` value in the routes (e.g. `/api/one-piece/sets`) and in the `?tcg=` filter for products.\n\n## How to use\n\nSearch products by combining filters, for example:\n\n```\nGET /api/products?tcg=one-piece&type=card&name=luffy\n```\n\nThe `tcg` and `set` references come back as **full documents**, not as IDs — you do not need `populate` for them. The slug/ID of each one is its `_id`.\n\n## Product attributes\n\nApart from the fixed fields (`name`, `images`, `markets`…), every product carries an `attributes` object: a map of strings whose **keys depend on the game**. A Lorcana card has `Cost Ink` and `Lore Value`; a Magic card has `OracleText`, `P` and `T`. Values may contain light HTML (`<em>`, `<strong>`, `<br>`), because that is how the source publishes them.\n\nTwo keys are worth calling out:\n\n- **`Artist`** — on a `card`, the illustrator of the card.\n- **`Description`** — on a `card`, its rules text; on a `sealed` product, the description of the product (what the box contains, print run notes, etc.).\n\n### Artist\n\n`attributes.Artist` holds the illustrator of the card. It is filled in progressively, so **not every card has it**:\n\n- **Games that publish the artist:** `digimon`, `flesh-and-blood`, `gundam`, `lorcana`, `magic`, `one-piece`, `pokemon`, `riftbound`, `star-wars-unlimited`.\n- **Games that do not publish it:** `cardfight-vanguard`, `dragon-ball-super-fusion-world`, `dragon-ball-super-masters`, `hololive`, `mitos-y-leyendas`, `union-arena`, `yugioh`.\n\nEven in the games that do publish it the coverage is not 100% (in `pokemon` and `gundam` it sits above half the catalog), so treat `Artist` as an optional key: check for it before reading it.\n\nThere is no `?artist=` filter — the field travels inside `attributes`.\n\n### Sealed product descriptions\n\n`attributes.Description` on a `type: \"sealed\"` product is the description of the sealed product itself. Most of the sealed catalog already has it:\n\n```\nGET /api/products?tcg=pokemon&type=sealed&limit=1\n```\n\n```json\n{\n  \"_id\": 50733,\n  \"type\": \"sealed\",\n  \"name\": \"10th Movie Commemoration Set\",\n  \"attributes\": {\n    \"Description\": \"To commemorate the 10th Pokémon movie release in Japan, a special card album was released containing 11 cards…\"\n  }\n}\n```\n\n## Pagination\n\n- `limit` — number of results per query (maximum `100`, default `25`).\n- `page` — the page you want to show of the total results.\n\nExample: `/api/products?tcg=pokemon&name=charizard&limit=50&page=2`\n\n## Showcase\n\nList of websites people are building with API TCG:\n\n1. [tcgmatch.cl](https://tcgmatch.cl)\n2. [Search Piece](https://search-piece.vercel.app/)\n\nWant to add your site? Open a pull request on [docs.apitcg.com](https://github.com/apitcg/docs.apitcg.com).\n\n## Questions\n\nIf you have any questions, you can write to: [support@apitcg.com](mailto:support@apitcg.com)",
+    "description": "Welcome to **API TCG**. The purpose of this API is to expose the card and product data of each TCG: games, sets/expansions, products (cards, sealed, accessories), market prices and price history. It covers **19 trading card games** and is refreshed every day.\n\n![API TCG](./intro.png)\n\n## Authentication\n\nAll data endpoints require an **API key**. Getting one is free:\n\n1. Create an account at [apitcg.com/register](https://apitcg.com/register) (or sign in at [apitcg.com/login](https://apitcg.com/login)).\n2. Open the [Developer Platform](https://apitcg.com/platform) and go to **[API Key](https://apitcg.com/platform/api-key)** — your key is shown there.\n3. Send it in the `x-api-key` header on every request:\n\n```bash\ncurl 'https://api.apitcg.com/api/products?tcg=one-piece&name=luffy' \\\n  -H 'x-api-key: YOUR_API_KEY'\n```\n\nJavaScript example:\n\n```js\nconst res = await fetch(\n  'https://api.apitcg.com/api/products?tcg=one-piece&name=luffy',\n  { headers: { 'x-api-key': process.env.APITCG_API_KEY } }\n);\nconst body = await res.json();\n```\n\nYou can paste your key in the **Authentication** panel of this documentation to try endpoints live.\n\nKeep your API key secret. If it was exposed, regenerate it from the [API Key](https://apitcg.com/platform/api-key) page: the old key stops working immediately.\n\n### Authentication errors\n\n| Status | `error` in the body | Meaning |\n|--------|------|---------|\n| `401 Unauthorized` | `API key is required, register into: https://apitcg.com/platform` | The `x-api-key` header is missing. |\n| `401 Unauthorized` | `Invalid API key.` | The key does not exist, or it was regenerated. |\n| `429 Too Many Requests` | `Request limit reached for this month.` | The monthly requests of your plan are used up. See [Plans and limits](#description/plans-and-limits). |\n| `429 Too Many Requests` | `Too many requests, slow down.` | More than 300 requests in a minute. Wait the seconds in the `Retry-After` header. |\n\n## Plans and limits\n\n| Plan | Requests per month | Price |\n|------|-------------------:|------:|\n| Free | 1,000 | $0 |\n| Starter | 20,000 | $19 / month |\n| Pro | 200,000 | $99 / month |\n\n- Every request authenticated with your key counts once against your monthly requests, including the ones that answer with an error.\n- The counter goes back to zero on the 1st of each month at 00:00, Chile time (America/Santiago).\n- Follow your usage and change plans in the [Developer Platform](https://apitcg.com/platform/plans). Paid plans are billed monthly through PayPal.\n- On top of the monthly requests, each IP can make up to **300 requests per minute**. Every response carries the `RateLimit-Policy` and `RateLimit` headers (`limit`, `remaining`, and `reset` in seconds).\n\nNeed more? Write to [support@apitcg.com](mailto:support@apitcg.com).\n\n## Available TCGs\n\n| Name | Slug |\n|------|------|\n| Cardfight Vanguard | `cardfight-vanguard` |\n| Cyberpunk | `cyberpunk` |\n| Digimon | `digimon` |\n| Dragon Ball Super Fusion World | `dragon-ball-super-fusion-world` |\n| Dragon Ball Super Masters | `dragon-ball-super-masters` |\n| Final Fantasy TCG | `final-fantasy-tcg` |\n| Flesh and Blood | `flesh-and-blood` |\n| Gundam | `gundam` |\n| hololive | `hololive` |\n| Lorcana | `lorcana` |\n| Magic | `magic` |\n| Mitos y Leyendas | `mitos-y-leyendas` |\n| One Piece | `one-piece` |\n| Palworld | `palworld` |\n| Pokémon | `pokemon` |\n| Riftbound | `riftbound` |\n| Star Wars Unlimited | `star-wars-unlimited` |\n| Union Arena | `union-arena` |\n| Yu-Gi-Oh | `yugioh` |\n\nUse the **slug** as the `{tcg}` value in the routes (e.g. `/api/one-piece/sets`) and in the `?tcg=` filter for products.\n\n## How to use\n\nSearch products by combining filters, for example:\n\n```\nGET /api/products?tcg=one-piece&type=card&name=luffy\n```\n\n- `name` matches any part of the name and ignores case (`luffy` finds `Monkey.D.Luffy`). If nothing matches, a fuzzy fallback runs and the response includes `fallback: true`.\n- `code` is the exact card code (`OP03-070`), case-sensitive.\n- `set` takes the set `_id` (`one-piece-pillars-of-strength`), as returned by `/api/{tcg}/sets`.\n\nThe `tcg` and `set` references come back as **full documents**, not as IDs — you do not need `populate` for them. The slug/ID of each one is its `_id`.\n\n## Prices\n\nProducts sold on TCGplayer carry their market prices in `markets.tcgplayer`, in US dollars:\n\n- `prices` — `low`, `mid`, `high` and `market` of the main printing.\n- `printing` — the printing those prices belong to (`Normal`, `Foil`, `Holofoil`, `Reverse Holofoil`, `1st Edition`…). The main printing is the first one with a market price, in that order.\n- `printings` — every printing TCGplayer sells for the product, each with its own prices. A price is `null` when TCGplayer has no data for it.\n\n```json\n\"tcgplayer\": {\n  \"id\": \"253325\",\n  \"prices\": { \"low\": 0.02, \"mid\": 0.2, \"high\": 2.2, \"market\": 0.18 },\n  \"printing\": \"Normal\",\n  \"printings\": [\n    { \"subTypeName\": \"Normal\", \"prices\": { \"low\": 0.02, \"mid\": 0.2, \"high\": 2.2, \"market\": 0.18 } },\n    { \"subTypeName\": \"Reverse Holofoil\", \"prices\": { \"low\": 0.1, \"mid\": 0.3, \"high\": 19.8, \"market\": 0.3 } }\n  ]\n}\n```\n\nPrices are refreshed every day, and each day is kept in the price history of the product (`GET /api/history-prices/{productId}`), together with the printing of that day's prices.\n\nMitos y Leyendas products do not carry prices.\n\n## Product attributes\n\nApart from the fixed fields (`name`, `images`, `markets`…), every product carries an `attributes` object: a map of strings whose **keys depend on the game**. A Lorcana card has `Cost Ink` and `Lore Value`; a Magic card has `OracleText`, `P` and `T`. Values may contain light HTML (`<em>`, `<strong>`, `<br>`), because that is how the source publishes them.\n\nTwo keys are worth calling out:\n\n- **`Artist`** — on a `card`, the illustrator of the card.\n- **`Description`** — on a `card`, its rules text; on a `sealed` product, the description of the product (what the box contains, print run notes, etc.).\n\n### Artist\n\n`attributes.Artist` holds the illustrator of the card. It is filled in progressively, so **not every card has it**:\n\n- **Games that publish the artist:** `cyberpunk`, `digimon`, `flesh-and-blood`, `gundam`, `lorcana`, `magic`, `one-piece`, `pokemon`, `riftbound`, `star-wars-unlimited`.\n- **Games that do not publish it:** `cardfight-vanguard`, `dragon-ball-super-fusion-world`, `dragon-ball-super-masters`, `final-fantasy-tcg`, `hololive`, `mitos-y-leyendas`, `palworld`, `union-arena`, `yugioh`.\n\nIn `pokemon` the illustrator is checked every week against [TCGdex](https://tcgdex.dev), which fixes and completes what TCGplayer publishes. The card's TCGdex ID travels in `markets.tcgdex.id`.\n\nEven in the games that do publish it the coverage is not 100%, so treat `Artist` as an optional key: check for it before reading it.\n\nThere is no `?artist=` filter — the field travels inside `attributes`.\n\n### Sealed product descriptions\n\n`attributes.Description` on a `type: \"sealed\"` product is the description of the sealed product itself. Most of the sealed catalog already has it:\n\n```\nGET /api/products?tcg=pokemon&type=sealed&limit=1\n```\n\n```json\n{\n  \"_id\": 50733,\n  \"type\": \"sealed\",\n  \"name\": \"10th Movie Commemoration Set\",\n  \"attributes\": {\n    \"Description\": \"To commemorate the 10th Pokémon movie release in Japan, a special card album was released containing 11 cards…\"\n  }\n}\n```\n\n## Pagination\n\n- `limit` — number of results per query (maximum `100`, default `25`).\n- `page` — the page you want to show of the total results.\n\nExample: `/api/products?tcg=pokemon&name=charizard&limit=50&page=2`\n\n`total` is the number of matching products. It is cached for up to a minute, so right after a sync it can lag slightly behind.\n\n### Syncing the whole catalog\n\nTo copy a large part of the catalog, page with a **cursor** instead of `page`: sort by `_id` and send the last `_id` you received as `afterId`. Stop when `data` comes back empty. In cursor mode `total` is `null`.\n\n```\nGET /api/products?tcg=pokemon&sortBy=_id&sortOrder=asc&limit=100&afterId=0\nGET /api/products?tcg=pokemon&sortBy=_id&sortOrder=asc&limit=100&afterId=45728\n```\n\nAfterwards, ask only for what changed since your last sync with `updatedSince` (ISO 8601):\n\n```\nGET /api/products?updatedSince=2026-10-01T00:00:00Z&sortBy=_id&sortOrder=asc&limit=100&afterId=0\n```\n\n## Data updates\n\nThe catalog follows TCGplayer every day (Chile time, America/Santiago):\n\n| When | What |\n|------|------|\n| Daily, 00:00 | Sets: name, code and release date |\n| Daily, 00:10 | New and updated products |\n| Daily, 01:10 | Prices and price history |\n| Mondays | Card artists and sealed product descriptions |\n| Tuesdays | Pokémon illustrators from TCGdex |\n\nSet codes (such as `OP03` or `OGN`) are the set abbreviations published by TCGplayer.\n\n## Showcase\n\nList of websites people are building with API TCG:\n\n1. [tcgmatch.cl](https://tcgmatch.cl)\n2. [Search Piece](https://search-piece.vercel.app/)\n\nWant to add your site? Open a pull request on [docs.apitcg.com](https://github.com/apitcg/docs.apitcg.com).\n\n## Questions\n\nIf you have any questions, you can write to: [support@apitcg.com](mailto:support@apitcg.com)",
     "version": "1.0.0",
     "contact": {
       "name": "API TCG Support",
@@ -116,7 +116,7 @@
                     "total": {
                       "type": "integer",
                       "description": "Number of TCGs returned (this endpoint does not paginate).",
-                      "example": 16
+                      "example": 19
                     }
                   }
                 },
@@ -399,7 +399,7 @@
           "Products"
         ],
         "summary": "List products (cards, sealed, accessories)",
-        "description": "Returns products with combinable filters. If you search by `name` and there is no exact match, a partial fallback search kicks in and the response includes `fallback: true`.\n\nThe `tcg` and `set` references always come back as **full documents** — you do not need `populate` for them.\n\n### Examples\n\n- Search cards by name:\n\n```\nGET /api/products?tcg=one-piece&name=luffy\n```\n\n- Search by card code:\n\n```\nGET /api/products?code=OP03-070\n```\n\n- Cards of a TCG with pagination and sorting:\n\n```\nGET /api/products?tcg=pokemon&type=card&name=charizard&limit=50&page=2\n```\n\n- Sealed products of a TCG (their description travels in `attributes.Description`):\n\n```\nGET /api/products?tcg=riftbound&type=sealed\n```\n\n- The illustrator of a card is in `attributes.Artist`, when the game publishes it:\n\n```\nGET /api/products?tcg=lorcana&type=card&name=elsa\n```\n\nSee [Product attributes](#description/product-attributes) for what `attributes` carries.",
+        "description": "Returns products with combinable filters. `name` matches any part of the name; if nothing matches, a fuzzy fallback search kicks in and the response includes `fallback: true`.\n\nThe `tcg` and `set` references always come back as **full documents** — you do not need `populate` for them.\n\n### Examples\n\n- Search cards by name:\n\n```\nGET /api/products?tcg=one-piece&name=luffy\n```\n\n- Search by card code:\n\n```\nGET /api/products?code=OP03-070\n```\n\n- Cards of a TCG with pagination and sorting:\n\n```\nGET /api/products?tcg=pokemon&type=card&name=charizard&limit=50&page=2\n```\n\n- Sealed products of a TCG (their description travels in `attributes.Description`):\n\n```\nGET /api/products?tcg=riftbound&type=sealed\n```\n\n- The illustrator of a card is in `attributes.Artist`, when the game publishes it:\n\n```\nGET /api/products?tcg=lorcana&type=card&name=elsa\n```\n\n- Full catalog sync with the cursor (send the last `_id` as `afterId`):\n\n```\nGET /api/products?tcg=pokemon&sortBy=_id&sortOrder=asc&limit=100&afterId=0\n```\n\nSee [Product attributes](#description/product-attributes) for what `attributes` carries and [Prices](#description/prices) for `markets`.",
         "operationId": "listProducts",
         "parameters": [
           {
@@ -428,7 +428,7 @@
           {
             "name": "set",
             "in": "query",
-            "description": "Filter by set (set ID/slug).",
+            "description": "Filter by set: the set `_id` (e.g. `one-piece-pillars-of-strength`), as returned by `/api/{tcg}/sets`.",
             "schema": {
               "type": "string"
             }
@@ -444,7 +444,7 @@
           {
             "name": "name",
             "in": "query",
-            "description": "Search by name (case-insensitive).",
+            "description": "Search by name: ignores case and matches any part of the name (`luffy` finds `Monkey.D.Luffy`). If nothing matches, a fuzzy fallback runs and the response includes `fallback: true`.",
             "schema": {
               "type": "string"
             },
@@ -453,7 +453,7 @@
           {
             "name": "code",
             "in": "query",
-            "description": "Search by card code.",
+            "description": "Exact card code, case-sensitive (e.g. `OP03-070`).",
             "schema": {
               "type": "string"
             },
@@ -462,11 +462,21 @@
           {
             "name": "updatedSince",
             "in": "query",
-            "description": "Only products updated since this date (ISO 8601).",
+            "description": "Only products updated since this date (ISO 8601). Combine it with `afterId` to sync only what changed.",
             "schema": {
               "type": "string",
               "format": "date-time"
             }
+          },
+          {
+            "name": "afterId",
+            "in": "query",
+            "description": "Cursor for full syncs: only products whose `_id` is greater than this value. Use it with `sortBy=_id&sortOrder=asc` and send the last `_id` you received. In cursor mode `total` comes back as `null`. See [Syncing the whole catalog](#description/syncing-the-whole-catalog).",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "example": 45728
           },
           {
             "name": "populate",
@@ -510,6 +520,8 @@
                     },
                     "total": {
                       "type": "integer",
+                      "nullable": true,
+                      "description": "Number of matching products, cached for up to a minute. `null` when you page with `afterId`.",
                       "example": 128
                     },
                     "fallback": {
@@ -582,15 +594,27 @@
                               "id": "500009",
                               "url": "https://www.tcgplayer.com/product/500009/one-piece-card-game-pillars-of-strength-monkeydluffy",
                               "prices": {
-                                "low": 0.1,
-                                "mid": 0.35,
+                                "low": 0.12,
+                                "mid": 0.31,
                                 "high": 100,
-                                "market": 0.29
-                              }
+                                "market": 0.25
+                              },
+                              "printing": "Foil",
+                              "printings": [
+                                {
+                                  "subTypeName": "Foil",
+                                  "prices": {
+                                    "low": 0.12,
+                                    "mid": 0.31,
+                                    "high": 100,
+                                    "market": 0.25
+                                  }
+                                }
+                              ]
                             }
                           },
                           "createdAt": "2026-03-25T22:37:10.800Z",
-                          "updatedAt": "2026-08-14T01:12:32.376Z"
+                          "updatedAt": "2026-10-18T04:11:47.502Z"
                         }
                       ],
                       "total": 3
@@ -655,6 +679,106 @@
                         }
                       ],
                       "total": 4740
+                    }
+                  },
+                  "pokemon-card": {
+                    "summary": "Pokémon card (printings and TCGdex)",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "_id": 45728,
+                          "type": "card",
+                          "name": "Drakloak",
+                          "tcg": {
+                            "_id": "pokemon",
+                            "name": "Pokémon",
+                            "description": "Pokémon TCG",
+                            "markets": {
+                              "tcgplayer": {
+                                "id": "3"
+                              },
+                              "tcgmatch": {
+                                "id": "pokemon"
+                              }
+                            }
+                          },
+                          "set": {
+                            "_id": "pokemon-swsh08-fusion-strike",
+                            "name": "SWSH08: Fusion Strike",
+                            "tcg": "pokemon",
+                            "code": "SWSH08",
+                            "markets": {
+                              "tcgplayer": {
+                                "id": "2906"
+                              },
+                              "tcgmatch": {
+                                "id": "pokemon-swsh08-fusion-strike"
+                              }
+                            },
+                            "slug": "swsh08-fusion-strike",
+                            "serie": null,
+                            "release_date": "2021-11-12T00:00:00.000Z"
+                          },
+                          "images": [
+                            {
+                              "small": "https://tcgplayer-cdn.tcgplayer.com/product/253325_200w.jpg",
+                              "medium": "https://tcgplayer-cdn.tcgplayer.com/product/253325_400w.jpg",
+                              "large": "https://tcgplayer-cdn.tcgplayer.com/product/253325_in_1000x1000.jpg"
+                            }
+                          ],
+                          "markets": {
+                            "tcgplayer": {
+                              "id": "253325",
+                              "url": "https://www.tcgplayer.com/product/253325/pokemon-swsh08-fusion-strike-drakloak",
+                              "prices": {
+                                "low": 0.02,
+                                "mid": 0.2,
+                                "high": 2.2,
+                                "market": 0.18
+                              },
+                              "printing": "Normal",
+                              "printings": [
+                                {
+                                  "subTypeName": "Normal",
+                                  "prices": {
+                                    "low": 0.02,
+                                    "mid": 0.2,
+                                    "high": 2.2,
+                                    "market": 0.18
+                                  }
+                                },
+                                {
+                                  "subTypeName": "Reverse Holofoil",
+                                  "prices": {
+                                    "low": 0.1,
+                                    "mid": 0.3,
+                                    "high": 19.8,
+                                    "market": 0.3
+                                  }
+                                }
+                              ]
+                            },
+                            "tcgdex": {
+                              "id": "swsh8-129"
+                            }
+                          },
+                          "code": "129/264",
+                          "attributes": {
+                            "Number": "129/264",
+                            "Rarity": "Uncommon",
+                            "Card Type": "Psychic",
+                            "HP": "90",
+                            "Stage": "Stage 1",
+                            "Attack 1": "[P] Spooky Shot (20)",
+                            "Weakness": "Dx2",
+                            "Artist": "HYOGONOSUKE"
+                          },
+                          "createdAt": "2026-03-25T22:39:03.550Z",
+                          "updatedAt": "2026-10-18T03:14:25.664Z"
+                        }
+                      ],
+                      "total": 1
                     }
                   }
                 }
@@ -743,7 +867,7 @@
           "History Prices"
         ],
         "summary": "Price history of a product",
-        "description": "Returns the daily price history of a product, sorted by date descending. Each record carries the prices of every market under `markets`.",
+        "description": "Returns the daily price history of a product, newest first: one record per day, with that day's TCGplayer prices and the printing they belong to. An unknown product returns an empty array.\n\n```\nGET /api/history-prices/9804?from=2026-10-01&limit=30\n```",
         "operationId": "getHistoryPrices",
         "parameters": [
           {
@@ -759,7 +883,7 @@
           {
             "name": "from",
             "in": "query",
-            "description": "Start date (ISO 8601).",
+            "description": "Only records from this day on (ISO 8601, e.g. `2026-10-01`).",
             "schema": {
               "type": "string",
               "format": "date"
@@ -768,7 +892,7 @@
           {
             "name": "to",
             "in": "query",
-            "description": "End date (ISO 8601).",
+            "description": "Only records up to this day (ISO 8601).",
             "schema": {
               "type": "string",
               "format": "date"
@@ -777,7 +901,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of records.",
+            "description": "Maximum number of records (default `100`).",
             "schema": {
               "type": "integer",
               "default": 100
@@ -794,7 +918,45 @@
                   "items": {
                     "$ref": "#/components/schemas/HistoryPrice"
                   }
-                }
+                },
+                "example": [
+                  {
+                    "markets": {
+                      "tcgplayer": {
+                        "prices": {
+                          "low": 0.12,
+                          "mid": 0.31,
+                          "high": 100,
+                          "market": 0.25
+                        },
+                        "printing": "Foil"
+                      }
+                    },
+                    "_id": "6ad447046ebc934f9e615a94",
+                    "product": "9804",
+                    "date": "2026-10-18T00:00:00.000Z",
+                    "createdAt": "2026-10-18T04:11:47.511Z",
+                    "updatedAt": "2026-10-18T04:11:47.511Z"
+                  },
+                  {
+                    "markets": {
+                      "tcgplayer": {
+                        "prices": {
+                          "low": 0.12,
+                          "mid": 0.31,
+                          "high": 100,
+                          "market": 0.28
+                        },
+                        "printing": "Foil"
+                      }
+                    },
+                    "_id": "6ad2f5866ebc934f9e556577",
+                    "date": "2026-10-17T00:00:00.000Z",
+                    "product": "9804",
+                    "createdAt": "2026-10-17T04:11:50.094Z",
+                    "updatedAt": "2026-10-17T04:11:50.094Z"
+                  }
+                ]
               }
             }
           },
@@ -830,9 +992,11 @@
           "type": "string",
           "enum": [
             "cardfight-vanguard",
+            "cyberpunk",
             "digimon",
             "dragon-ball-super-fusion-world",
             "dragon-ball-super-masters",
+            "final-fantasy-tcg",
             "flesh-and-blood",
             "gundam",
             "hololive",
@@ -840,6 +1004,7 @@
             "magic",
             "mitos-y-leyendas",
             "one-piece",
+            "palworld",
             "pokemon",
             "riftbound",
             "star-wars-unlimited",
@@ -895,7 +1060,7 @@
     },
     "responses": {
       "NotFound": {
-        "description": "Resource not found.",
+        "description": "Resource not found: `TCG no encontrado`, `Set no encontrado en este TCG` or `Producto no encontrado`.",
         "content": {
           "application/json": {
             "schema": {
@@ -924,23 +1089,56 @@
             "schema": {
               "$ref": "#/components/schemas/Error"
             },
-            "example": {
-              "success": false,
-              "error": "API key is required, register into: https://apitcg.com/platform"
+            "examples": {
+              "missing": {
+                "summary": "Missing key",
+                "value": {
+                  "success": false,
+                  "error": "API key is required, register into: https://apitcg.com/platform"
+                }
+              },
+              "invalid": {
+                "summary": "Invalid key",
+                "value": {
+                  "success": false,
+                  "error": "Invalid API key."
+                }
+              }
             }
           }
         }
       },
       "TooManyRequests": {
-        "description": "Too many requests.",
+        "description": "The monthly requests of your plan are used up, or more than 300 requests in a minute from the same IP (wait the seconds in `Retry-After`).",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/Error"
             },
-            "example": {
-              "success": false,
-              "error": "Request limit reached for this month."
+            "examples": {
+              "monthly": {
+                "summary": "Monthly requests used up",
+                "value": {
+                  "success": false,
+                  "error": "Request limit reached for this month."
+                }
+              },
+              "burst": {
+                "summary": "More than 300 requests in a minute",
+                "value": {
+                  "success": false,
+                  "error": "Too many requests, slow down."
+                }
+              }
+            }
+          }
+        },
+        "headers": {
+          "Retry-After": {
+            "description": "Seconds to wait (only on the per-minute limit).",
+            "schema": {
+              "type": "integer",
+              "example": 42
             }
           }
         }
@@ -1060,7 +1258,8 @@
           },
           "serie": {
             "type": "string",
-            "description": "ID of the series it belongs to (optional)."
+            "description": "ID of the series it belongs to (optional).",
+            "nullable": true
           },
           "release_date": {
             "type": "string",
@@ -1243,6 +1442,49 @@
                         "example": 0.31
                       }
                     }
+                  },
+                  "printing": {
+                    "type": "string",
+                    "description": "Printing whose prices are in `prices`: the first one with a market price, in the order Normal, Unlimited, Holofoil, Unlimited Holofoil, Foil, Cold Foil, Rainbow Foil, Reverse Holofoil, 1st Edition, 1st Edition Holofoil, Limited.",
+                    "example": "Normal"
+                  },
+                  "printings": {
+                    "type": "array",
+                    "description": "Every printing TCGplayer sells for the product, in the same order, each with its own prices.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "subTypeName": {
+                          "type": "string",
+                          "example": "Reverse Holofoil"
+                        },
+                        "prices": {
+                          "type": "object",
+                          "properties": {
+                            "low": {
+                              "type": "number",
+                              "nullable": true,
+                              "example": 0.02
+                            },
+                            "mid": {
+                              "type": "number",
+                              "nullable": true,
+                              "example": 0.2
+                            },
+                            "high": {
+                              "type": "number",
+                              "nullable": true,
+                              "example": 2.2
+                            },
+                            "market": {
+                              "type": "number",
+                              "nullable": true,
+                              "example": 0.18
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               },
@@ -1276,6 +1518,17 @@
                       }
                     }
                   }
+                },
+                "description": "Reserved for TCGmatch (Chile) _(not in use in the current catalog)_."
+              },
+              "tcgdex": {
+                "type": "object",
+                "description": "(Pokémon cards) The card on [TCGdex](https://tcgdex.dev), the source of its illustrator.",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "swsh8-129"
+                  }
                 }
               }
             }
@@ -1287,7 +1540,7 @@
           },
           "cardNumber": {
             "type": "string",
-            "description": "(Card) Card number within the set _(not in use)_. The number travels in `attributes.Number`."
+            "description": "(Card) Card number within the set. Only Mitos y Leyendas uses it; in the other games the number travels in `attributes.Number`."
           },
           "attributes": {
             "type": "object",
@@ -1372,7 +1625,7 @@
           "date": {
             "type": "string",
             "format": "date-time",
-            "description": "Record day (normalized to midnight)."
+            "description": "Day of the record, at midnight UTC: read only the date part."
           },
           "markets": {
             "type": "object",
@@ -1400,6 +1653,11 @@
                         "example": 0.31
                       }
                     }
+                  },
+                  "printing": {
+                    "type": "string",
+                    "description": "Printing the prices of that day belong to.",
+                    "example": "Normal"
                   }
                 }
               },
@@ -1427,7 +1685,8 @@
                       }
                     }
                   }
-                }
+                },
+                "description": "_(not in use)_"
               }
             }
           },
